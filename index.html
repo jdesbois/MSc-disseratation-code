@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pair Kidney Exchange: Graph Visualisation </title>
+
+    <!--Loading example data as Javascript objects-->
+    <script src="data/example_small_data.js"></script>
+    <script src="data/example_large_data.js"></script>
+
+    <!--Package declarations-->
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <!-- Custom style sheet declaration-->
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+
+<body>
+    <div class="container" id="root-container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 >Paired Kidney Exchange: Graph Visualisation</h2>
+            </div>
+        </div>
+        <div class="row" id="nav-row">
+            <!-- Beginning of NAV BAR-->
+            <div class="col-lg-12">
+                <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
+                    <a class="navbar-brand" href="#"></a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Example Graphs
+                                </a>
+                                <div id="graphDropdown" class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="#" id="small-graph" value='small'>Small Graph
+                                        Example</a>
+                                    <a class="dropdown-item" href="#" id="large-graph" value='large'>Large Graph
+                                        Example</a>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <label class="nav-link" for="file-selector">
+                                    <input type="file" id="file-selector" accept=".json" class="form-control-file">
+                                    Load JSON
+                                </label>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="matching-request" href="#">Matching Request</a>
+                            </li>
+                            <li class="nav-item" id="reset-button">
+                                <a class="nav-link" href="#">Reset Graph</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div> <!-- End of Nav Row -->
+        <div class="row" id="main-content">
+            <!-- Beginning of main content on page-->
+            <!-- Graph canvas container-->
+            <div class="col-lg-9">
+                <div id="myNetwork"></div>
+            </div>
+            <!--End of Graph container -->
+            <div class="col-lg-3" id="control-panel-container">
+                <!--Start of Layout selection criteria -->
+                <div id="layout-options">
+                    <h5>Layout options</h5>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="layoutSelect">Layout</label>
+                        </div>
+                        <select class="custom-select" id="layoutSelect">
+                            <option value="physics">Physics</option>
+                            <option value="circle">Circle</option>
+                        </select>
+                    </div>
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="node-color">Node colour</label>
+                        <input class="form-control" id="node-color" type="color" value="#30afbf">
+                    </div>
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="node-highlight">Node highlight</label>
+                        <input class="form-control" id="node-highlight" type="color" value="#61c962">
+                    </div>
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="edge-color">Edge colour</label>
+                        <input class="form-control" id="edge-color" type="color" value="#879621">
+                    </div>
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="edge-highlight">Edge highlight</label>
+                        <input class="form-control" id="edge-highlight" type="color" value="#f5e320">
+                    </div>
+                </div>
+
+                <!--End of layout selection criteria -->
+                <!-- Start of Matching critera selection area -->
+                <h5>Matching criteria</h5>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="chainSelect">Chain Length</label>
+                    </div>
+                    <select class="custom-select" id="chainSelect">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                    </select>
+
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="operationSelect">Operation</label>
+                    </div>
+                    <select class="custom-select" id="operationSelect">
+                        <option value="optimal">Optimal</option>
+                        <option value="maxcard">Maxcard</option>
+                        <option value="pairs">Pairs</option>
+                    </select>
+                </div>
+                <!--End of matching criteria selection area-->
+
+            </div> <!-- End of control panel-->
+
+        </div> <!-- End of graph/control row-->
+        <div class="row"> <!--Footer content-->
+            <div class="col-lg-6">
+                <div class="card" id="desc-card">
+                    <div class="card-header">
+                        Matching Criteria
+                    </div>
+                    <div class="card-body">
+                        <span class="card-text" id="matching-desc"></span> <br />
+                    </div>
+                </div>
+            </div> <!-- End of Footer coloumn-->
+            <div class="col-lg-6">
+                <div class="card" id="exchange-data-card">
+                    <div class="card-header">
+                        Exchange Data
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">
+                        Number of exchanges: <span id="num-exchanges"></span> <br />
+                        Three way exchanges: <span id="three-ways"></span> <br />
+                        Two way exchanges: <span id="two-ways"></span> <br />
+                        Total transplants: <span id="total-transplants"></span><br />
+                        Weight: <span id="weight"></span> <br />
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div> <!--End of footer row-->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <p>                
+                    <h5>Testing area not part of functionality of app</h5>
+
+                    <button id="print-obj">Print currently donorPool object</button>
+                    <button id="add-to-obj">add node to object</button>
+                </p>
+
+            </div>
+        </div>
+
+    </div>
+    <!--End of Root container-->
+
+
+
+
+
+    <!-- Script declaration -->
+    <script type="text/javascript" src="network.js"></script>
+    <script type="text/javascript" src="api.js"></script>
+    <script type="text/javascript" src="controller.js"></script>
+
+</body>
+
+</html>
