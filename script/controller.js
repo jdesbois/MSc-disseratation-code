@@ -24,7 +24,7 @@ layoutDropdown.addEventListener('change', () => {
  * Function that deals with on click event for the graph
  */
 network.on('click', (params) => {
-    console.log(nodes.get(params['nodes'][0]))
+    console.log(params)
 })
 
 

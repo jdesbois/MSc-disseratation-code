@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">    
     <title>Pair Kidney Exchange: Graph Visualisation </title>
 
     <!--Loading example data as Javascript objects-->
@@ -30,6 +30,26 @@
 </head>
 
 <body>
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Options</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">  
+                        Donor age: <input type="number">
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-primary"></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
     <div class="container" id="root-container">
         <div class="row">
             <div class="col-lg-12">
@@ -153,17 +173,17 @@
                 </div>
             </div> <!-- End of Footer coloumn-->
             <div class="col-lg-6">
-                <div class="card" id="exchange-data-card">
+                <div class="card text-center" id="exchange-data-card">
                     <div class="card-header">
                         Exchange Data
                     </div>
                     <div class="card-body">
                         <p class="card-text">
-                        Number of exchanges: <span id="num-exchanges"></span> <br />
-                        Three way exchanges: <span id="three-ways"></span> <br />
-                        Two way exchanges: <span id="two-ways"></span> <br />
-                        Total transplants: <span id="total-transplants"></span><br />
-                        Weight: <span id="weight"></span> <br />
+                        Number of exchanges: <strong id="num-exchanges"></strong> <br />
+                        Three way exchanges: <strong id="three-ways"></strong> <br />
+                        Two way exchanges: <strong id="two-ways"></strong> <br />
+                        Total transplants: <strong id="total-transplants"></strong><br />
+                        Weight: <strong id="weight"></strong> <br />
                         </p>
                     </div>
                 </div>

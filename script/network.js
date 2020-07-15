@@ -21,6 +21,15 @@ const defaultOptions = {
     autoResize: true,
     manipulation: {
         enabled: true,
+        addNode: function(nodeData, callback) {
+            addNodeFunction(nodeData, callback);
+        },
+        addEdge: function(edgeData, callback) {
+            edgeData.id = edgeData.from + "-" + edgeData.to
+            edgeData.score = "5"
+            console.log(edgeData)
+            callback(edgeData)
+        }
     },
     nodes: {
         shape: 'dot',
@@ -343,4 +352,11 @@ function colorEdges(cycle) {
             width: 5,})
     }
     return edgeArray
+}
+
+function addNodeFunction(nodeData, callback) {
+    $('#exampleModal').modal('show')
+
+    callback(nodeData)
+
 }
