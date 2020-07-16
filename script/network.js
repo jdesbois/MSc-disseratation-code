@@ -4,6 +4,9 @@
  * Including methods to draw the optimal matching criteria received from the API
  */
 
+
+
+
 //Declaration of datasets for nodes and edges to be used on graph
 let nodes = new vis.DataSet();
 let edges = new vis.DataSet();
@@ -16,7 +19,7 @@ let data = {
 }
 // Default options object sent to the gragh constructor
 const defaultOptions = {
-    height: '100%',
+    height: '400px',
     width: '100%',
     autoResize: true,
     manipulation: {
@@ -37,7 +40,7 @@ const defaultOptions = {
             background: 'white',
             highlight: 'green',
         },
-        size: 25,
+        size: 15,
         font: {
             size: 30,
             align: 'left',
@@ -72,11 +75,11 @@ const defaultOptions = {
         multiselect: true,
         selectable: true,
     },
-    // layout: {
+    layout: {
     //     randomSeed: 150,
-    //     improvedLayout: true,
+        improvedLayout: true,
     //     // clusterThreshold: 12,
-    // }
+    }
 }
 // Creation of graph canvas (known as network by library) 
 var network = new vis.Network(networkContainer, data, defaultOptions)
@@ -278,9 +281,9 @@ function colorNodes(cycle) {
 function colorNode(node) {
     let coloredNode = {}
     let layout = document.getElementById('layoutSelect')
-    let nodeID = node['d']
-    let x = nodes.get(nodeID.toString())['x']
-    let y = nodes.get(nodeID.toString())['y']
+    let nodeID = node['d'].toString()
+    let x = nodes.get(nodeID)['x']
+    let y = nodes.get(nodeID)['y']
 
     coloredNode.id = nodeID
 
@@ -316,9 +319,9 @@ function colorEdges(cycle) {
     let options = {
         edges: {
             color: {
-                opacity: 0.2
+                opacity: 0.4
             },
-            width: 0.25,
+            width: 0.75,
         }
     }
     // Set options for non matched edges
@@ -354,9 +357,65 @@ function colorEdges(cycle) {
     return edgeArray
 }
 
+
+
 function addNodeFunction(nodeData, callback) {
-    $('#exampleModal').modal('show')
+    let nodeModal = $('#nodeModal')
+    nodeModal.modal('show')
+    let saveButton = document.getElementById('saveNodeButton')
+    saveButton.addEventListener('click', () => {
+        let donorAgeInput = document.getElementById('donor-age-input')
+        let idInput = document.getElementById('id-input')
+        let donorAge = parseInt(donorAgeInput.value)
+        let donorID = parseInt(idInput.value)
 
-    callback(nodeData)
+        if (currentDataObj === null) {
+            currentDataObj = buildJSONObject()
+        }
+ 
+        currentDataObj['data'][donorID] = createJSONDonor(donorID, donorAge)
 
+        nodeData.id = donorID
+        nodeData['dage'] = donorAge
+        nodeData['label'] = nodeData.id.toString()
+        addNodeToGraph(nodeData, callback)
+
+        console.log(currentDataObj)
+        nodeModal.modal('hide')
+    })  
+    $('#id-alert').hide() 
+}
+
+
+
+/**
+ * Function: Creates initial data object if building graph manually
+ * Is called when current object is null
+ */
+function buildJSONObject() {
+    let obj = {
+        "data": {
+        }
+    }
+    return obj
+}
+
+function createJSONDonor(id, dage) {
+    let obj = {
+        "sources": [id],
+        "dage": dage,
+    }
+    return obj
+}
+
+function addNodeToGraph(data, callback) {
+    try {
+        callback(data)
+    } catch (err) {
+        console.log(err.message)
+        let idAlert = document.getElementById('id-alert')
+        idAlert.innerHTML = err.message
+        $('#id-alert').show()
+    }
+    
 }

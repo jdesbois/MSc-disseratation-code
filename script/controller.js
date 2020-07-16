@@ -100,3 +100,8 @@ const addNode = document.getElementById('add-to-obj').addEventListener('click', 
     currentDataObj['data']['8'] = newNode
 })
 
+const deleteGraph = document.getElementById('delete-button')
+deleteGraph.addEventListener('click', () => {
+    nodes.clear()
+    edges.clear()
+})
