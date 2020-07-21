@@ -85,7 +85,7 @@ function updateDescriptionData(exchange_data) {
 }
 
 const printObject = document.getElementById('print-obj').addEventListener('click', () => {
-    console.log(matchingObj);
+    console.log(typeof window.currentDataObj['data']);
 })
 
 const addNode = document.getElementById('add-to-obj').addEventListener('click', ()=> {
@@ -104,4 +104,5 @@ const deleteGraph = document.getElementById('delete-button')
 deleteGraph.addEventListener('click', () => {
     nodes.clear()
     edges.clear()
+    window.currentDataObj = null
 })

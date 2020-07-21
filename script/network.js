@@ -4,9 +4,6 @@
  * Including methods to draw the optimal matching criteria received from the API
  */
 
-
-
-
 //Declaration of datasets for nodes and edges to be used on graph
 let nodes = new vis.DataSet();
 let edges = new vis.DataSet();
@@ -19,7 +16,7 @@ let data = {
 }
 // Default options object sent to the gragh constructor
 const defaultOptions = {
-    height: '400px',
+    height: '100%',
     width: '100%',
     autoResize: true,
     manipulation: {
@@ -28,10 +25,7 @@ const defaultOptions = {
             addNodeFunction(nodeData, callback);
         },
         addEdge: function(edgeData, callback) {
-            edgeData.id = edgeData.from + "-" + edgeData.to
-            edgeData.score = "5"
-            console.log(edgeData)
-            callback(edgeData)
+            addEdgeFunction(edgeData, callback)
         }
     },
     nodes: {
@@ -121,6 +115,7 @@ function buildNetwork(jsonObj) {
 function createNodes(nodes) {
     nodeArray = []
     for (const node of nodes) {
+        console.log(typeof node[0])
         nodeArray.push({ id: node[0], 'dage': node[1]['dage'], label: node[0]})
     }
     network.setOptions({physics: false})
@@ -215,7 +210,7 @@ function setColourOptions() {
     }
     network.setOptions(options)
 }
-
+// Function that resets the network options to default settings and applys colour changes selected by User
 function defaultNetworkOptions() {
     network.setOptions(defaultOptions)
     setColourOptions()
@@ -357,35 +352,51 @@ function colorEdges(cycle) {
     return edgeArray
 }
 
-
+/**
+ * Function: Shows Modal required to add a new node
+ * Assigns event listener to save button
+ * Gathers user inputs
+ * Passes data to JSON and Graph functions
+ * Closes modal
+ * @param {*} nodeData 
+ * @param {*} callback 
+ */
 
 function addNodeFunction(nodeData, callback) {
+    //Select and show modal for editing
     let nodeModal = $('#nodeModal')
     nodeModal.modal('show')
+    // Select and assign event listener to Save Button
     let saveButton = document.getElementById('saveNodeButton')
-    saveButton.addEventListener('click', () => {
+    saveButton.addEventListener('click', (event) => {
+        //Selection of input components
         let donorAgeInput = document.getElementById('donor-age-input')
         let idInput = document.getElementById('id-input')
+        let altruisticInput = document.getElementById('altruistic-input')
+        //Gather input values
         let donorAge = parseInt(donorAgeInput.value)
         let donorID = parseInt(idInput.value)
-
-        if (currentDataObj === null) {
-            currentDataObj = buildJSONObject()
-        }
- 
-        currentDataObj['data'][donorID] = createJSONDonor(donorID, donorAge)
-
-        nodeData.id = donorID
+        let altruisticDonor = altruisticInput.checked
+        //Assign Values to nodeData for passing to callback
+        nodeData.id = donorID.toString()
         nodeData['dage'] = donorAge
         nodeData['label'] = nodeData.id.toString()
+        // Pass data to JSON adder and Add to graph call back
+        addDonorToJSON(donorID, donorAge)
         addNodeToGraph(nodeData, callback)
-
-        console.log(currentDataObj)
+        // Checks to see if the altruisitic donor checkbox is true
+        if (altruisticDonor) {
+            // If true sends donorID to add altruistic donor function
+            addAltruisticDonor(donorID)
+        }
+        // Stop event from triggering/bubbling up
+        event.stopImmediatePropagation()
+        //Remove the modal from view
         nodeModal.modal('hide')
-    })  
+    })
+    // Hide warning alert  
     $('#id-alert').hide() 
 }
-
 
 
 /**
@@ -400,6 +411,46 @@ function buildJSONObject() {
     return obj
 }
 
+/**
+ * Function: Checks for current donor pool object
+ * If not present, creates new one, if present carries on
+ * Sends donorID and age to JSON formatter for Donor
+ * Adds Donor to current donor pool obj
+ * Logs current donor pool obj
+ * @param {*} donorID 
+ * @param {*} donorAge 
+ */
+function addDonorToJSON(donorID, donorAge) {
+    //Checks if JSON object exists, creates blank one if not
+    if(window.currentDataObj === null) {
+        window.currentDataObj = buildJSONObject();
+    }
+    // Checks if the donor ID passed is currently in donor pool
+    if (currentDataObj['data'].hasOwnProperty(donorID)) {
+        console.log("Donor ID Exists: Updating instead")
+        currentDataObj['data'][donorID] = createJSONDonor(donorID, donorAge)
+    } else {
+        currentDataObj['data'][donorID] = createJSONDonor(donorID, donorAge)
+    }
+
+    // currentDataObj['data'][donorID] = createJSONDonor(donorID, donorAge)
+    console.log(currentDataObj)
+}
+/**
+ * Function: Removes sources from selected donorID
+ * Adds an altruistic entry to donor in JSON
+ * @param {*} donorID 
+ */
+function addAltruisticDonor(donorID) {
+    let donor = currentDataObj['data'][donorID]
+    delete donor.sources
+    donor['altruistic'] = true
+}
+/**
+ * Function that creates JSON donor entry to be added to donor pool
+ * @param {*} id 
+ * @param {*} dage 
+ */
 function createJSONDonor(id, dage) {
     let obj = {
         "sources": [id],
@@ -407,15 +458,91 @@ function createJSONDonor(id, dage) {
     }
     return obj
 }
-
+/**
+ * Function that attempts to add new node to graph, calls Alert banner if callback throws an error
+ * @param {*} data 
+ * @param {*} callback 
+ */
 function addNodeToGraph(data, callback) {
     try {
+        console.log("graph function called")
         callback(data)
     } catch (err) {
         console.log(err.message)
-        let idAlert = document.getElementById('id-alert')
-        idAlert.innerHTML = err.message
-        $('#id-alert').show()
-    }
+        callAlertBanner(err.message)
+    } 
+}
+/**
+ * Function: Shows modal required to add new edge
+ * Assigns event to save button, unbinds button before assigning to stop event propagation
+ * Collects user input and creates Edge ID user Edge data
+ * Passes data to Graph and JSON functions to add edge
+ * Closes modal
+ * @param {*} edgeData 
+ * @param {*} callback 
+ */
+function addEdgeFunction(edgeData, callback) {
+    let edgeModal = $('#edgeModal')
+    edgeModal.modal('show')
     
+    $('#saveEdgeButton').unbind('click').click(function() {
+        let scoreInput = document.getElementById('score-input')
+        let score = parseInt(scoreInput.value)
+        let edgeFrom = edgeData['from']
+        let edgeTo = edgeData['to']
+
+        console.log(`from: ${edgeFrom} to: ${edgeTo} score: ${score}`)
+
+        addEdgeToJSON(score, edgeFrom, edgeTo)        
+        addEdgeToGraph(score, edgeFrom, edgeTo)
+
+        edgeModal.modal('hide')
+    })
+    $('#id-alert').hide()
+}
+
+/**
+ * Function: This helper function takes data passes from addEdge function
+ * Checks if the To Node already has an array of matches 
+ * IF yes: adds edge to matches array
+ * If no: creates array and adds edge
+ * @param {*} score 
+ * @param {*} from 
+ * @param {*} to 
+ */
+function addEdgeToJSON(score, from, to) {
+    let fromNode = currentDataObj['data'][from]
+
+    if (fromNode.hasOwnProperty('matches')) {
+        fromNode['matches'].push({'recipient': parseInt(to), 'score': score})
+    } else {
+        fromNode['matches'] = [{'recipient': parseInt(to), 'score': score}]
+    }
+}
+
+/**
+ * Function: takes data passed from addEdge function
+ * Creates the edge ID
+ * Creates a new Edge object
+ * Adds edge object to the graph
+ * @param {*} score 
+ * @param {*} from 
+ * @param {*} to 
+ */
+function addEdgeToGraph(score, from, to) {
+    let edgeID = from + "-" + to
+    let newEdge = {id: edgeID, from: from, to: to, score: score}
+    console.log(newEdge)
+    edges.update(newEdge)
+}
+
+/**
+ * Function that displays message in alert banner under NAV bar
+ * Takes message parameter as content for alert banner
+ * @param {*} msg 
+ */
+function callAlertBanner(msg) {
+    let idAlert = document.getElementById('id-alert')
+    idAlert.innerHTML = msg
+    $('#id-alert').show()
 }

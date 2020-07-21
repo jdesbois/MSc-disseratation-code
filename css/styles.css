@@ -1,45 +1,46 @@
 /* Body styling  */
 body {
-    padding: 20px;
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   }
 
 /* main content div styling */
 #main-content {
-    height: 650px;
-    width: 100%;
-    margin: 5px, 0px, 5px, 0px;
+    height: 100%;
+    /* width: 100%; */
+    margin-bottom: 5px;
 }
 
-/* Network styles */
 #myNetwork {
-    width: 100%;
-    height: 90%;
-    border: 1px solid grey;
-    margin: 5px;
-  }
+    /* width: 100%; */
+    height: 600px;
+    border: 1px solid lightgrey;
+    margin-bottom: 5px;
+}
 
 
 /* nav styling */
 #nav-row {
     margin-bottom: 5px;
 }
+
+/* File input button styling */
 input[type="file"] {
     display:none;
 }
 
-
-/* Control panel styling */
-
-#control-panel-container {
-    width: 99%;
-    height: 99%;
+/* Stats container styling */
+#stats-container {
+    margin-bottom: 5px;
 }
 
-/* Algorithm data styling */
-#desc-card, #exchange-data-card {
+#desc-card {
     height: 100%;
 }
+/* Control panel styling */
+
+
+/* Algorithm data styling */
+
 
 #id-alert {
     display: none;

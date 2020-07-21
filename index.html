@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">    
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Pair Kidney Exchange: Graph Visualisation </title>
 
     <!--Loading example data as Javascript objects-->
@@ -30,40 +30,82 @@
 </head>
 
 <body>
-            <!-- Modal -->
-            <div class="modal fade" id="nodeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                  <div class="modal-content">
+    <!-- Modal for node -->
+    <div class="modal fade" id="nodeModal" tabindex="-1" role="dialog" aria-labelledby="nodeModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
 
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="exampleModalLabel">Options</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="nodeModalLabel">Options</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
-                      </button>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Pair ID:</span>
+                        </div>
+                        <input type="number" class="form-control" id="id-input" value="0">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Donor Age:</span>
+                        </div>
+                        <input type="number" class="form-control" id="donor-age-input" value="0">
                     </div>
-                    <div class="modal-body">  
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">Pair ID:</span>
-                            </div>
-                            <input type="number" class="form-control" id="id-input" value="0">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">Donor Age:</span>
-                            </div>
-                            <input type="number" class="form-control" id="donor-age-input" value="0">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <input type="checkbox" id="altruistic-input" name="altruistic" vale="altruistic">
+                                <span> &nbsp;Altruistic donor?</span>
+                            </div>  
                         </div>
                     </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary"data-dismiss="modal">Close</button>
-                      <button type="button" class="btn btn-primary" id="saveNodeButton">Save</button>
-                    </div>
-                  </div>
                 </div>
-              </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveNodeButton">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End of Node Modal -->
+    <!-- Beginning of edge modal -->
+        <div class="modal fade" id="edgeModal" tabindex="-1" role="dialog" aria-labelledby="edgeModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="edgeModalLabel">Options</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Score:</span>
+                        </div>
+                        <input type="number" class="form-control" id="score-input" value="0">
+                        <!-- <div class="input-group-prepend">
+                            <span class="input-group-text">Donor Age:</span>
+                        </div>
+                        <input type="number" class="form-control" id="donor-age-input" value="0"> -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveEdgeButton">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- End of Edge Modal -->
     <div class="container" id="root-container">
         <div class="row">
             <div class="col-lg-12">
-                <h2 >Paired Kidney Exchange: Graph Visualisation</h2>
+                <h2>Paired Kidney Exchange: Graph Visualisation</h2>
             </div>
         </div>
         <div class="row" id="nav-row">
@@ -105,29 +147,31 @@
                 </nav>
             </div>
         </div> <!-- End of Nav Row -->
-        <div class="row"> <!--Alerts Row-->
+        <div class="row">
+            <!--Alerts Row-->
             <div class="col-lg-12">
                 <!-- Alert Container -->
                 <div class="alert alert-warning" role="alert" id="id-alert">
-    
+
                 </div>
-                  <!-- End of Alert Container-->
+                <!-- End of Alert Container-->
             </div>
         </div>
+        <!-- Beginning of main content on page-->
         <div class="row" id="main-content">
-            <!-- Beginning of main content on page-->
+            
             <!-- Graph canvas container-->
-            <div class="col-lg-9">
+            <div class="col-lg-9" id="network-column">
                 <div id="myNetwork">
-                    
+
                 </div>
             </div>
             <!--End of Graph container -->
             <div class="col-lg-3" id="control-panel-container">
                 <!--Start of Layout selection criteria -->
                 <div id="layout-options">
-                    <h5>Layout options</h5>
-                    <div class="input-group mb-3">
+                    <h6>Layout options</h6>
+                    <div class="input-group input-group-sm mb-3">
                         <div class="input-group-prepend">
                             <label class="input-group-text" for="layoutSelect">Layout</label>
                         </div>
@@ -136,88 +180,104 @@
                             <option value="circle">Circle</option>
                         </select>
                     </div>
-                    <div class="input-group mb-3">
-                        <label class="input-group-text" for="node-color">Node colour</label>
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="node-color">Node colour</label>
+                        </div>
                         <input class="form-control" id="node-color" type="color" value="#30afbf">
                     </div>
-                    <div class="input-group mb-3">
-                        <label class="input-group-text" for="node-highlight">Node highlight</label>
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend"><label class="input-group-text" for="node-highlight">Node highlight</label></div>
                         <input class="form-control" id="node-highlight" type="color" value="#61c962">
                     </div>
-                    <div class="input-group mb-3">
-                        <label class="input-group-text" for="edge-color">Edge colour</label>
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend"><label class="input-group-text" for="edge-color">Edge colour</label></div>
                         <input class="form-control" id="edge-color" type="color" value="#879621">
                     </div>
-                    <div class="input-group mb-3">
-                        <label class="input-group-text" for="edge-highlight">Edge highlight</label>
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend"><label class="input-group-text" for="edge-highlight">Edge highlight</label></div>
                         <input class="form-control" id="edge-highlight" type="color" value="#f5e320">
                     </div>
                 </div>
 
                 <!--End of layout selection criteria -->
                 <!-- Start of Matching critera selection area -->
-                <h5>Matching criteria</h5>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <label class="input-group-text" for="chainSelect">Chain Length</label>
-                    </div>
-                    <select class="custom-select" id="chainSelect">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                    </select>
+                <div id="matching-panel">
+                    <h6>Matching criteria</h6>
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="chainSelect">Chain Length</label>
+                        </div>
+                        <select class="custom-select" id="chainSelect">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                        </select>
 
-                </div>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <label class="input-group-text" for="operationSelect">Operation</label>
                     </div>
-                    <select class="custom-select" id="operationSelect">
-                        <option value="optimal">Optimal</option>
-                        <option value="maxcard">Maxcard</option>
-                        <option value="pairs">Pairs</option>
-                    </select>
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="operationSelect">Operation</label>
+                        </div>
+                        <select class="custom-select" id="operationSelect">
+                            <option value="optimal">Optimal</option>
+                            <option value="maxcard">Maxcard</option>
+                            <option value="pairs">Pairs</option>
+                        </select>
+                    </div>
                 </div>
                 <!--End of matching criteria selection area-->
                 <button class="btn btn-info" id="matching-request">Run</button>
             </div> <!-- End of control panel-->
-
         </div> <!-- End of graph/control row-->
-        <div class="row"> <!--Footer content-->
+        <!--Selected Item row-->
+        <!-- <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <h5 class="card-header">Selected Node/Edge Info</h5>
+                    <div class="card-body" id="selected-item-info">
+                    </div>
+                  </div>
+            </div>
+        </div>
+        <br /> -->
+        <!-- End of Selected Item Row -->
+        <!--Footer content-->
+        <div class="row" id="stats-container">
             <div class="col-lg-6">
                 <div class="card" id="desc-card">
-                    <div class="card-header">
+                    <h5 class="card-header">
                         Matching Criteria
-                    </div>
+                    </h5>
                     <div class="card-body">
                         <span class="card-text" id="matching-desc"></span> <br />
                     </div>
                 </div>
-            </div> <!-- End of Footer coloumn-->
+            </div>
             <div class="col-lg-6">
                 <div class="card text-center" id="exchange-data-card">
-                    <div class="card-header">
+                    <h5 class="card-header">
                         Exchange Data
-                    </div>
+                    </h5>
                     <div class="card-body">
                         <p class="card-text">
-                        Number of exchanges: <strong id="num-exchanges"></strong> <br />
-                        Three way exchanges: <strong id="three-ways"></strong> <br />
-                        Two way exchanges: <strong id="two-ways"></strong> <br />
-                        Total transplants: <strong id="total-transplants"></strong><br />
-                        Weight: <strong id="weight"></strong> <br />
+                            Number of exchanges: <strong id="num-exchanges"></strong> <br />
+                            Three way exchanges: <strong id="three-ways"></strong> <br />
+                            Two way exchanges: <strong id="two-ways"></strong> <br />
+                            Total transplants: <strong id="total-transplants"></strong><br />
+                            Weight: <strong id="weight"></strong> <br />
                         </p>
                     </div>
                 </div>
             </div>
-        </div> <!--End of footer row-->
+        </div>
+        <!-- End of footer row -->
 
         <div class="row">
             <div class="col-lg-12">
-                <p>                
-                    <h5>Testing area not part of functionality of app</h5>
-
-                    <button id="print-obj">Print currently donorPool object</button>
-                    <button id="add-to-obj">add node to object</button>
+                <p>
+                <h5>Testing area not part of functionality of app</h5>
+                <button id="print-obj">Print currently donorPool object</button>
+                <button id="add-to-obj">add node to object</button>
                 </p>
 
             </div>
