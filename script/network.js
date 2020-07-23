@@ -234,6 +234,8 @@ network.on("stabilized", () => {
  */
 
 function plotMatches(data) {
+    // Resets current graph to pre-matching request
+    buildNetwork(currentDataObj)
     console.log(data)
     let nodeArray = []
     let edgeArray = []
