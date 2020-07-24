@@ -1,5 +1,5 @@
 
-
+// Global obj variables for current donor pool and returned matching object
 var currentDataObj = null
 var matchingObj = null
 
@@ -44,7 +44,7 @@ matchingRequestButton.addEventListener('click', () => {
     let operation = operationSelect.value
     let chainLength = chainSelect.value
     makeMatchingRequest(currentDataObj, operation, chainLength).then(data => {
-        matchingObj = data
+        window.matchingObj = data
         plotMatches(data)
         updateDescriptionData(data['output']['exchange_data'][0])
     })
@@ -54,14 +54,22 @@ matchingRequestButton.addEventListener('click', () => {
 const fileSelection = document.getElementById('file-selector')
 fileSelection.addEventListener('change', (event) => {
     const reader = new FileReader();
+    let fileType = event.target.files[0]['name'].split('.').pop().toLowerCase()
 
     reader.addEventListener('load', (event) => {
         let fileContent = event.target.result
-        let jsonObj = JSON.parse(fileContent);
-        currentDataObj = jsonObj
-        buildNetwork(jsonObj)
+        if (fileType === 'json') {
+            currentDataObj = JSON.parse(fileContent)
+            buildNetwork(currentDataObj)
+        } else if (fileType === 'xml') {
+            currentDataObj = readXMLFile(fileContent)
+            buildNetwork(currentDataObj)
+        } else {
+            callAlertBanner(`${fileType} not currently supported`)
+        }
     })
     reader.readAsText(event.target.files[0])
+
 })
 
 // Function: Updates the matching algorithm status data
@@ -85,24 +93,29 @@ function updateDescriptionData(exchange_data) {
 }
 
 const printObject = document.getElementById('print-obj').addEventListener('click', () => {
-    console.log(typeof window.currentDataObj['data']);
+    console.log(window.currentDataObj);
 })
 
 const addNode = document.getElementById('add-to-obj').addEventListener('click', ()=> {
-    let newNode = {
-        'sources': [8],
-        'dage': 35,
-        'matches': [
-            {'recipient': 2, 'score': 3},
-            {'recipient': 5, 'score': 1}
-        ]
-    }
-    currentDataObj['data']['8'] = newNode
+    console.log(window.matchingObj)
 })
 
+/**
+ * Function: Sets current data pool object to null
+ * Clears out nodes and edges dataset 
+ */
 const deleteGraph = document.getElementById('delete-button')
 deleteGraph.addEventListener('click', () => {
     nodes.clear()
     edges.clear()
     window.currentDataObj = null
+})
+
+
+
+const testXMLConvert = document.getElementById('convert-to-xml')
+testXMLConvert.addEventListener('click', () => {
+    let returnObject = createXMLDom(window.currentDataObj)
+    let stringXML = createXMLString(currentDataObj)
+    console.log(stringXML)
 })

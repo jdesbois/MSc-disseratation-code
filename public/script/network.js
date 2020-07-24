@@ -115,7 +115,6 @@ function buildNetwork(jsonObj) {
 function createNodes(nodes) {
     nodeArray = []
     for (const node of nodes) {
-        console.log(typeof node[0])
         nodeArray.push({ id: node[0], 'dage': node[1]['dage'], label: node[0]})
     }
     network.setOptions({physics: false})
@@ -397,7 +396,7 @@ function addNodeFunction(nodeData, callback) {
         nodeModal.modal('hide')
     })
     // Hide warning alert  
-    $('#id-alert').hide() 
+    hideAlertBanner() 
 }
 
 
@@ -467,6 +466,7 @@ function createJSONDonor(id, dage) {
  */
 function addNodeToGraph(data, callback) {
     try {
+        console.log(data)
         console.log("graph function called")
         callback(data)
     } catch (err) {
@@ -500,7 +500,7 @@ function addEdgeFunction(edgeData, callback) {
 
         edgeModal.modal('hide')
     })
-    $('#id-alert').hide()
+    hideAlertBanner()
 }
 
 /**
@@ -523,7 +523,7 @@ function addEdgeToJSON(score, from, to) {
 }
 
 /**
- * Function: takes data passed from addEdge function
+ * Function: takes data passed from addEdge function    console.log(xmlStringDocument)    console.log(xmlStringDocument)
  * Creates the edge ID
  * Creates a new Edge object
  * Adds edge object to the graph
@@ -547,4 +547,8 @@ function callAlertBanner(msg) {
     let idAlert = document.getElementById('id-alert')
     idAlert.innerHTML = msg
     $('#id-alert').show()
+}
+
+function hideAlertBanner() {
+    $('#id-alert').hide()
 }
