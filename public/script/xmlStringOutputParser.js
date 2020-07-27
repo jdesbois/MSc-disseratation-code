@@ -132,3 +132,5 @@ function createMatchString(match) {
     return matchString
     
 }
+
+exports.createXMLString = createXMLString

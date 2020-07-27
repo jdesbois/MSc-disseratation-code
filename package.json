@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/jdesbois/MSc-disseratation-code/issues"
   },
-  "homepage": "https://github.com/jdesbois/MSc-disseratation-code#readme"
+  "homepage": "https://github.com/jdesbois/MSc-disseratation-code#readme",
+  "dependencies": {
+    "commonjs": "0.0.1",
+    "cookie-parser": "^1.4.5"
+  }
 }

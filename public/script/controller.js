@@ -97,7 +97,65 @@ const printObject = document.getElementById('print-obj').addEventListener('click
 })
 
 const addNode = document.getElementById('add-to-obj').addEventListener('click', ()=> {
-    console.log(window.matchingObj)
+
+})
+
+/**
+ * Function: Assigns event listener to Save XML nav entry
+ * Makes a fetch post request to backend
+ * resceives file to download in response
+ * Creates a link document object
+ * Assigns it file download information
+ * triggers click event
+ */
+const saveXML = document.getElementById('save-xml').addEventListener('click', () => {
+    const url = '/save-xml'
+    
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json, text/plain',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(window.currentDataObj)
+    })
+    .then(response => response.blob())
+    .then(blob => {
+        const newURL = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = newURL
+        a.download = 'donorPool.xml' || 'download'
+        a.click()
+    })
+})
+
+/**
+ * Function: Assigns event listener to Save JSON nav entry
+ * Makes a fetch post request to backend
+ * resceives file to download in response
+ * Creates a link document object
+ * Assigns it file download information
+ * triggers click event
+ */
+const saveJSON = document.getElementById('save-json').addEventListener('click', () => {
+    const url = '/save-json'
+    
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json, text/plain',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(window.currentDataObj)
+    })
+    .then(response => response.blob())
+    .then(blob => {
+        const newURL = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = newURL
+        a.download = 'donorPool.xml' || 'download'
+        a.click()
+    })
 })
 
 /**
