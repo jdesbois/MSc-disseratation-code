@@ -28,8 +28,13 @@ async function makeMatchingRequest(donorPool, operation, chainLength) {
 
     }
 
-    let response = await fetch(url, fetchData);
-    let result = await response.json()
+    await fetch(url, fetchData).then((response) =>  {
+        if (response.ok) {
+            result = response.json()
+        } else {
+            console.log(response)
+        }
+    })
 
     return result 
 }

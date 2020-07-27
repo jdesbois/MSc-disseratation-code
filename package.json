@@ -1,0 +1,19 @@
+{
+  "name": "pke_project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jdesbois/MSc-disseratation-code.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jdesbois/MSc-disseratation-code/issues"
+  },
+  "homepage": "https://github.com/jdesbois/MSc-disseratation-code#readme"
+}
