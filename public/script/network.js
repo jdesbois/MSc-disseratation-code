@@ -22,10 +22,12 @@ const defaultOptions = {
     manipulation: {
         enabled: true,
         addNode: function(nodeData, callback) {
-            addNodeFunction(nodeData, callback);
+            $('#nodeModal').modal('show')
+            document.getElementById('saveNodeButton').onclick = addNodeToGraph.bind(this, nodeData, callback)
         },
         addEdge: function(edgeData, callback) {
-            addEdgeFunction(edgeData, callback)
+            $('#edgeModal').modal('show')
+            document.getElementById('saveEdgeButton').onclick = addEdgeFunction.bind(this, edgeData, callback)
         }
     },
     nodes: {
@@ -290,11 +292,11 @@ function colorNode(node) {
 
     if (node['a']) {
         coloredNode.color = {
-            background: 'green'
+            background: document.getElementById('node-highlight').value
         }
     } else {
         coloredNode.color = {
-            background: 'pink'
+            background: document.getElementById('matched-color').value
         }
     }
 
@@ -326,7 +328,7 @@ function colorEdges(cycle) {
     let edgeArray = []
     // Color options for the matched edges
     let edgeOptions = {
-        color: 'black',
+        color: document.getElementById('edge-color').value,
         highlight: '#42f59e',
         opacity: 1,
     }
@@ -352,53 +354,6 @@ function colorEdges(cycle) {
     }
     return edgeArray
 }
-
-/**
- * Function: Shows Modal required to add a new node
- * Assigns event listener to save button
- * Gathers user inputs
- * Passes data to JSON and Graph functions
- * Closes modal
- * @param {*} nodeData 
- * @param {*} callback 
- */
-
-function addNodeFunction(nodeData, callback) {
-    //Select and show modal for editing
-    let nodeModal = $('#nodeModal')
-    nodeModal.modal('show')
-    // Select and assign event listener to Save Button
-    let saveButton = document.getElementById('saveNodeButton')
-    saveButton.addEventListener('click', (event) => {
-        //Selection of input components
-        let donorAgeInput = document.getElementById('donor-age-input')
-        let idInput = document.getElementById('id-input')
-        let altruisticInput = document.getElementById('altruistic-input')
-        //Gather input values
-        let donorAge = parseInt(donorAgeInput.value)
-        let donorID = parseInt(idInput.value)
-        let altruisticDonor = altruisticInput.checked
-        //Assign Values to nodeData for passing to callback
-        nodeData.id = donorID.toString()
-        nodeData['dage'] = donorAge
-        nodeData['label'] = nodeData.id.toString()
-        // Pass data to JSON adder and Add to graph call back
-        addDonorToJSON(donorID, donorAge)
-        addNodeToGraph(nodeData, callback)
-        // Checks to see if the altruisitic donor checkbox is true
-        if (altruisticDonor) {
-            // If true sends donorID to add altruistic donor function
-            addAltruisticDonor(donorID)
-        }
-        // Stop event from triggering/bubbling up
-        event.stopImmediatePropagation()
-        //Remove the modal from view
-        nodeModal.modal('hide')
-    })
-    // Hide warning alert  
-    hideAlertBanner() 
-}
-
 
 /**
  * Function: Creates initial data object if building graph manually
@@ -464,15 +419,31 @@ function createJSONDonor(id, dage) {
  * @param {*} data 
  * @param {*} callback 
  */
-function addNodeToGraph(data, callback) {
+
+function addNodeToGraph(nodeData, callback) {
+    let nodeID = document.getElementById('id-input').value
+    let donorAge = parseInt(document.getElementById('donor-age-input').value)
+    console.log(typeof nodeID)
+    nodeData.id = nodeID
+    nodeData['dage'] = donorAge
+    nodeData['label'] = nodeID
+    //Calls function to add node to JSON object
+    addDonorToJSON(parseInt(nodeID), donorAge)
+    if (document.getElementById('altruistic-input').checked) {
+        addAltruisticDonor(nodeData.id)
+        nodeData.color = {
+            color: document.getElementById('node-highlight').value
+        }
+    }
     try {
-        console.log(data)
-        console.log("graph function called")
-        callback(data)
+        console.log(`Adding to graph`)
+        callback(nodeData)
     } catch (err) {
         console.log(err.message)
         callAlertBanner(err.message)
-    } 
+    }
+    $('#nodeModal').modal('hide')
+    
 }
 /**
  * Function: Shows modal required to add new edge
@@ -484,23 +455,20 @@ function addNodeToGraph(data, callback) {
  * @param {*} callback 
  */
 function addEdgeFunction(edgeData, callback) {
-    let edgeModal = $('#edgeModal')
-    edgeModal.modal('show')
+    let scoreInput = document.getElementById('score-input')
+    let score = parseInt(scoreInput.value)
+    let edgeFrom = edgeData['from']
+    let edgeTo = edgeData['to']
     
-    $('#saveEdgeButton').unbind('click').click(function() {
-        let scoreInput = document.getElementById('score-input')
-        let score = parseInt(scoreInput.value)
-        let edgeFrom = edgeData['from']
-        let edgeTo = edgeData['to']
-
-        console.log(`from: ${edgeFrom} to: ${edgeTo} score: ${score}`)
-
-        addEdgeToJSON(score, edgeFrom, edgeTo)        
-        addEdgeToGraph(score, edgeFrom, edgeTo)
-
-        edgeModal.modal('hide')
-    })
-    hideAlertBanner()
+    try {
+        console.log("adding edge to graph and JSON")
+        addEdgeToJSON(score, edgeFrom, edgeTo)
+        callback(edgeData)
+    } catch (err) {
+        console.log(err.message)
+        callAlertBanner(err.message)
+    }
+    $('#edgeModal').modal('hide')
 }
 
 /**
@@ -541,14 +509,21 @@ function addEdgeToGraph(score, from, to) {
 /**
  * Function that displays message in alert banner under NAV bar
  * Takes message parameter as content for alert banner
+ * Calls timeout for banner to dissappear after 5 secs
  * @param {*} msg 
  */
 function callAlertBanner(msg) {
     let idAlert = document.getElementById('id-alert')
     idAlert.innerHTML = msg
     $('#id-alert').show()
+    setTimeout(function() {
+        $('#id-alert').hide()
+    }, 5000)
 }
 
+/**
+ * Function: Hides alert banner by calling function
+ */
 function hideAlertBanner() {
     $('#id-alert').hide()
 }

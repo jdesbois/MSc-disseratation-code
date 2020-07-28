@@ -23,9 +23,9 @@ layoutDropdown.addEventListener('change', () => {
 /**
  * Function that deals with on click event for the graph
  */
-network.on('click', (params) => {
-    console.log(params)
-})
+// network.on('click', (params) => {
+//     console.log(params)
+// })
 
 
 // Reset graph button logic
@@ -34,6 +34,11 @@ resetButton.addEventListener('click', () => {
     buildNetwork(currentDataObj)
 })
 
+// Set Colour button logic 
+const setLayoutButton = document.getElementById('set-layout-options')
+setLayoutButton.addEventListener('click', () => {
+    setColourOptions()
+})
 
 // Matching request button logic
 const matchingRequestButton = document.getElementById('matching-request')
@@ -44,6 +49,10 @@ matchingRequestButton.addEventListener('click', () => {
     let operation = operationSelect.value
     let chainLength = chainSelect.value
     makeMatchingRequest(currentDataObj, operation, chainLength).then(data => {
+        if (currentDataObj === null) {
+            callAlertBanner("No donor pool present")
+            return
+        }
         window.matchingObj = data
         plotMatches(data)
         updateDescriptionData(data['output']['exchange_data'][0])
