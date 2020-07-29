@@ -4,41 +4,102 @@
             "sources": [
                 1
             ],
-            "dage": 25,
             "matches": [
                 {
                     "recipient": 2,
+                    "score": 3
+                },
+                {
+                    "recipient": 3,
                     "score": 1
+                },
+                {
+                    "recipient": 4,
+                    "score": 2
                 }
-            ]
+            ],
+            "dage": 65
         },
         "2": {
             "sources": [
                 2
             ],
-            "dage": 35,
             "matches": [
                 {
                     "recipient": 1,
+                    "score": 2
+                },
+                {
+                    "recipient": 5,
                     "score": 1
                 }
-            ]
+            ],
+            "dage": 45
         },
         "3": {
             "sources": [
                 3
             ],
-            "dage": 45,
             "matches": [
                 {
                     "recipient": 1,
-                    "score": 5
+                    "score": 1
+                }
+            ],
+            "dage": 25
+        },
+        "4": {
+            "sources": [
+                4
+            ],
+            "matches": [
+                {
+                    "recipient": 3,
+                    "score": 2
                 },
                 {
                     "recipient": 2,
-                    "score": 5
+                    "score": 3
+                },
+                {
+                    "recipient": 5,
+                    "score": 4
                 }
-            ]
+            ],
+            "dage": 55
+        },
+        "5": {
+            "sources": [
+                5,
+                6
+            ],
+            "matches": [
+                {
+                    "recipient": 4,
+                    "score": 2
+                },
+                {
+                    "recipient": 2,
+                    "score": 1
+                }
+            ],
+            "dage": 30
+        },
+        "6": {
+            "altruistic": true,
+            "matches": [
+                {
+                    "recipient": 7,
+                    "score": 10
+                }
+            ],
+            "dage": 29
+        },
+        "7": {
+            "sources": [
+                7
+            ],
+            "dage": 29
         }
     }
 }

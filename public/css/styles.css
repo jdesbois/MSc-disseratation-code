@@ -46,6 +46,9 @@ input[type="file"] {
     display: none;
 }
 
-
+/* Selected item info panel */
+#selected-item-info {
+    min-height: 125px;
+}
 
 

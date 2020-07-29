@@ -28,6 +28,21 @@ const defaultOptions = {
         addEdge: function(edgeData, callback) {
             $('#edgeModal').modal('show')
             document.getElementById('saveEdgeButton').onclick = addEdgeFunction.bind(this, edgeData, callback)
+        },
+        editNode: function(nodeData, callback) {
+            document.getElementById('id-input').value = nodeData.id
+            document.getElementById('donor-age-input').value = nodeData.dage
+            $('#nodeModal').modal('show')
+            document.getElementById('saveNodeButton').onclick = addNodeToGraph.bind(this, nodeData, callback)
+        },
+        // editEdge: function(edgeData, callback) {
+        //     console.log(edgeData)
+        //     $('#edgeModal').modal('show')
+        //     document.getElementById('saveEdgeButton').onclick = addEdgeFunction.bind(this, edgeData, callback)
+        // },
+        deleteNode: function(nodeData, callback) {
+            delete currentDataObj['data'][nodeData['nodes'][0]]
+            callback(data)
         }
     },
     nodes: {
@@ -46,7 +61,8 @@ const defaultOptions = {
                 enabled: true,
 
             }
-        }
+        },
+        labelHighlightBold: true,
     },
     edges: {
         physics: false,
@@ -459,7 +475,9 @@ function addEdgeFunction(edgeData, callback) {
     let score = parseInt(scoreInput.value)
     let edgeFrom = edgeData['from']
     let edgeTo = edgeData['to']
-    
+    let edgeID = edgeData['from'] + "-" + edgeData['to']
+    edgeData.id = edgeID
+    edgeData.score = score
     try {
         console.log("adding edge to graph and JSON")
         addEdgeToJSON(score, edgeFrom, edgeTo)

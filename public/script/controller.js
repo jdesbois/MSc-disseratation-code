@@ -23,10 +23,42 @@ layoutDropdown.addEventListener('change', () => {
 /**
  * Function that deals with on click event for the graph
  */
-// network.on('click', (params) => {
-//     console.log(params)
-// })
+network.on('click', (params) => {
+    console.log(params)
+    // Clears information display before displaying new information
+    clearSelectionInfo()
 
+    if (params['nodes'][0]) {
+        displaySelectedNodeInfo(params)
+    }
+
+    if (!params['nodes'][0] && params['edges'][0]) {
+        displaySelectedEdgeInfo(params)
+    } 
+
+})
+
+// Display selected node information
+function displaySelectedNodeInfo(params) {
+    let innerString = `Donor ID: ${params['nodes'][0]} Donor age: ${nodes.get(params['nodes'][0])['dage']}`
+    if (window.currentDataObj['data'][params['nodes'][0]]['altruistic']) {
+        innerString += ` Altruistic: ${true}`
+    } else {
+        innerString += ` Altruistic: ${false}`
+    }
+    document.getElementById('selected-item-display').innerHTML = innerString
+}
+
+// Displays information about selected edge
+function displaySelectedEdgeInfo(params) {
+    let innerString = `Edge ID: ${params['edges'][0]} Score: ${edges.get(params['edges'][0])['score']}`
+    document.getElementById('selected-item-display').innerHTML = innerString
+}
+
+// Clears selection info when click occurs on graph
+function clearSelectionInfo() {
+    document.getElementById('selected-item-display').innerHTML = " "
+}
 
 // Reset graph button logic
 const resetButton = document.getElementById('reset-button')
