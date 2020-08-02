@@ -135,7 +135,7 @@ function createNodes(entries) {
     nodeArray = []
     for (const node of entries) {
         nodeArray.push({ 
-            id: node[0], 
+            id: node[0],
             'dage': node[1]['dage'], 
             label: "D" + node[0] + (node[1]['sources'] ? "P"+node[1]['sources'][0] : "A"),
             patient: (node[1]['sources'] ? node[1]['sources'][0] : "na")
@@ -157,17 +157,25 @@ function createEdges(entries) {
     for (const node of entries) {
         if (node[1]['matches']) {
             for (const edge of node[1]['matches']) {
-                console.log(nodes.get({
-                    filter: function(item){
-                        return (item['patient'] == 2)
+                let recipientNode = nodes.get({
+                    filter: function(item) {
+                        return (item['patient'] == edge['recipient'])
                     }
-                }))
-                let edgeObject = {
-                    id: node[0] + "-" + edge['recipient'], 
-                    from: node[0], 
-                    to: edge['recipient'], 
-                    score: edge['score']}
-                edgeArray.push(edgeObject)
+                })
+                // console.log(recipientNode.length)
+                for (let i=0; i<recipientNode.length; i++) {
+                    let edgeObject = {
+                        id: node[0] + "-" + recipientNode[i]['id'], 
+                        from: node[0], 
+                        to: recipientNode[i]['id'], 
+                        score: edge['score']
+                    }
+                    // console.log(edgeObject)
+                    edgeArray.push(edgeObject)
+                }
+                // console.log(node)
+
+
             }
         }
     }
@@ -310,6 +318,7 @@ function colorNodes(cycle) {
 function colorNode(node) {
     let coloredNode = {}
     let layout = document.getElementById('layoutSelect')
+    // console.log(node)
     let nodeID = node['d'].toString()
     let x = nodes.get(nodeID)['x']
     let y = nodes.get(nodeID)['y']
@@ -407,17 +416,21 @@ function buildJSONObject() {
  * @param {*} donorID 
  * @param {*} donorAge 
  */
-function addDonorToJSON(donorID, donorAge) {
+function addDonorToJSON(nodeData) {
     //Checks if JSON object exists, creates blank one if not
+    let donorID = parseInt(nodeData.id)
+    let patient = parseInt(nodeData.patient)
+    let donorAge = nodeData['dage']
+
     if(window.currentDataObj === null) {
         window.currentDataObj = buildJSONObject();
     }
     // Checks if the donor ID passed is currently in donor pool
     if (currentDataObj['data'].hasOwnProperty(donorID)) {
         console.log("Donor ID Exists: Updating instead")
-        currentDataObj['data'][donorID] = createJSONDonor(donorID, donorAge)
+        currentDataObj['data'][donorID] = createJSONDonor(patient, donorAge)
     } else {
-        currentDataObj['data'][donorID] = createJSONDonor(donorID, donorAge)
+        currentDataObj['data'][donorID] = createJSONDonor(patient, donorAge)
     }
 
     // currentDataObj['data'][donorID] = createJSONDonor(donorID, donorAge)
@@ -438,9 +451,9 @@ function addAltruisticDonor(donorID) {
  * @param {*} id 
  * @param {*} dage 
  */
-function createJSONDonor(id, dage) {
+function createJSONDonor(patient, dage) {
     let obj = {
-        "sources": [id],
+        "sources": [patient],
         "dage": dage,
     }
     return obj
@@ -456,14 +469,16 @@ function addNodeToGraph(nodeData, callback) {
     let donorAge = parseInt(document.getElementById('donor-age-input').value)
     console.log(typeof nodeID)
     nodeData.id = nodeID
+    nodeData.patient = document.getElementById('patient-input').value
     nodeData['dage'] = donorAge
-    nodeData['label'] = nodeID
+    nodeData['label'] = `D${nodeData.id}P${nodeData.patient}`
     //Calls function to add node to JSON object
-    addDonorToJSON(parseInt(nodeID), donorAge)
+    addDonorToJSON(nodeData)
     if (document.getElementById('altruistic-input').checked) {
         addAltruisticDonor(nodeData.id)
+        nodeData['label'] = `D${nodeData.id}A`
         nodeData.color = {
-            color: document.getElementById('node-highlight').value
+            color: document.getElementById('node-highlight').value,
         }
     }
     try {

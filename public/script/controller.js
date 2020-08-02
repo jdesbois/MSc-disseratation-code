@@ -42,7 +42,7 @@ network.on('click', (params) => {
 function displaySelectedNodeInfo(params) {
     let node = nodes.get(params['nodes'][0])
     let innerString = `Donor: ${node['id']} Patient: ${node['patient']} Donor age: ${node['dage']}`
-    if (window.currentDataObj['data'][params['nodes'][0]]['altruistic']) {
+    if (nodes.get(params['nodes'][0])['label'].split("").pop() === "A") {
         innerString += ` Altruistic: True`
     } else {
         innerString += ` Altruistic: False`
