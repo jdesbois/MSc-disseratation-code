@@ -40,12 +40,14 @@ network.on('click', (params) => {
 
 // Display selected node information
 function displaySelectedNodeInfo(params) {
-    let innerString = `Donor ID: ${params['nodes'][0]} Donor age: ${nodes.get(params['nodes'][0])['dage']}`
+    let node = nodes.get(params['nodes'][0])
+    let innerString = `Donor: ${node['id']} Patient: ${node['patient']} Donor age: ${node['dage']}`
     if (window.currentDataObj['data'][params['nodes'][0]]['altruistic']) {
-        innerString += ` Altruistic: ${true}`
+        innerString += ` Altruistic: True`
     } else {
-        innerString += ` Altruistic: ${false}`
+        innerString += ` Altruistic: False`
     }
+    // innerString += ` Patient: ${node['patient']}`
     document.getElementById('selected-item-display').innerHTML = innerString
 }
 
@@ -165,7 +167,7 @@ const saveXML = document.getElementById('save-xml').addEventListener('click', ()
         const newURL = URL.createObjectURL(blob)
         const a = document.createElement('a')
         a.href = newURL
-        a.download = 'donorPool.xml' || 'download'
+        a.download = 'graphXML.xml' || 'download'
         a.click()
     })
 })
@@ -194,7 +196,7 @@ const saveJSON = document.getElementById('save-json').addEventListener('click', 
         const newURL = URL.createObjectURL(blob)
         const a = document.createElement('a')
         a.href = newURL
-        a.download = 'donorPool.xml' || 'download'
+        a.download = 'graphJSON.json' || 'download'
         a.click()
     })
 })
@@ -214,7 +216,31 @@ deleteGraph.addEventListener('click', () => {
 
 const testXMLConvert = document.getElementById('convert-to-xml')
 testXMLConvert.addEventListener('click', () => {
-    let returnObject = createXMLDom(window.currentDataObj)
-    let stringXML = createXMLString(currentDataObj)
-    console.log(stringXML)
+    let returnedItem = nodes.get({
+        filter: function(item) {
+            return (item.patient == 2)
+        }
+    })
+    console.log(returnedItem)
+})
+
+
+const saveImageButton = document.getElementById('save-image').addEventListener('click', () => {
+    const url = '/save-img'
+    let canvas = network.canvas.frame.canvas
+    let context = canvas.getContext('2d')
+    context.fillStyle = '#FFF'
+    context.fillRect(0, 0, canvas.width, canvas.height)
+    let imgURL = canvas.toDataURL('image/jpeg')
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json, text/plain',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            img: imgURL
+        })
+    })
+    
 })

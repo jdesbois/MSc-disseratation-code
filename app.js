@@ -26,13 +26,13 @@ app.post('/save-json', async(req, res) => {
 
     let data = JSON.stringify(req.body, null, 4)
     try {
-        await fs.writeFile(`${__dirname}/public/data/donorPool.json`, data);
+        await fs.writeFile(`${__dirname}/public/data/graphJSON.json`, data);
         console.log("JSON written to file") 
     } catch (error) {
         console.log(error)
     }
 
-    res.download(`${__dirname}/public/data/donorPool.json`)
+    res.download(`${__dirname}/public/data/graphJSON.json`)
 })
 
 /**
@@ -44,13 +44,26 @@ app.post('/save-json', async(req, res) => {
 app.post('/save-xml', async(req, res) => {
 
     try {
-        await fs.writeFile(`${__dirname}/public/data/donorPool.xml`, xmlString.createXMLString(req.body))
+        await fs.writeFile(`${__dirname}/public/data/graphXML.xml`, xmlString.createXMLString(req.body))
         console.log('XML Written to file')
     } catch (error) {
         console.log(error)
     } 
-    res.download(`${__dirname}/public/data/donorPool.xml`)
+    res.download(`${__dirname}/public/data/graphXML.xml`)
 })
 
+app.post('/save-img', async(req, res) => {
+    let uri = req.body['img']
+    let imgData = uri.split(';base64,').pop()
+    // console.log(uri)
+    try {
+        fs.writeFile(`${__dirname}/public/data/graphIMG.jpeg`, imgData, { encoding: 'base64'})
+    } catch (err) {
+        console.log(err)
+    }
+    
+
+    
+})
 
 app.listen(port, () => console.log(`Application running and listening at http://localhost:${port}`))

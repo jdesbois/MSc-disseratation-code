@@ -108,6 +108,7 @@ function buildNetwork(jsonObj) {
     let entries = Object.entries(jsonObj['data'])
 
     let nodesArray = createNodes(entries)
+    nodes.add(nodesArray)
     let edgesArray = createEdges(entries)
     
     let layout = document.getElementById('layoutSelect')
@@ -120,7 +121,7 @@ function buildNetwork(jsonObj) {
 
     setColourOptions()    
 
-    nodes.add(nodesArray)
+    nodes.update(nodesArray)
     edges.add(edgesArray)
     network.fit(nodes)
 }
@@ -130,10 +131,15 @@ function buildNetwork(jsonObj) {
  * Returns node array
  * @param {*} nodes 
  */
-function createNodes(nodes) {
+function createNodes(entries) {
     nodeArray = []
-    for (const node of nodes) {
-        nodeArray.push({ id: node[0], 'dage': node[1]['dage'], label: node[0]})
+    for (const node of entries) {
+        nodeArray.push({ 
+            id: node[0], 
+            'dage': node[1]['dage'], 
+            label: "D" + node[0] + (node[1]['sources'] ? "P"+node[1]['sources'][0] : "A"),
+            patient: (node[1]['sources'] ? node[1]['sources'][0] : "na")
+        })
     }
     network.setOptions({physics: false})
     return nodeArray
@@ -146,12 +152,21 @@ function createNodes(nodes) {
  * Returns array of edges
  * @param {*} nodes 
  */
-function createEdges(nodes) {
+function createEdges(entries) {
     edgeArray = []
-    for (const node of nodes) {
+    for (const node of entries) {
         if (node[1]['matches']) {
             for (const edge of node[1]['matches']) {
-                let edgeObject = {id: node[0] + "-" + edge['recipient'], from: node[0], to: edge['recipient'], score: edge['score']}
+                console.log(nodes.get({
+                    filter: function(item){
+                        return (item['patient'] == 2)
+                    }
+                }))
+                let edgeObject = {
+                    id: node[0] + "-" + edge['recipient'], 
+                    from: node[0], 
+                    to: edge['recipient'], 
+                    score: edge['score']}
                 edgeArray.push(edgeObject)
             }
         }

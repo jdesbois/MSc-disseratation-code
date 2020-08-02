@@ -142,12 +142,23 @@
                             <li class="nav-item" id="delete-button">
                                 <a class="nav-link" href="#">Delete Graph</a>
                             </li>
-                            <li class="nav-item" id="save-json">
-                                <a class="nav-link" href="#">Save Donor JSON</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="saveDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Save Graph
+                                </a>
+                                <div id="saveDropdownMenu" class="dropdown-menu" aria-labelledby="saveDropdown">
+                                    <a class="dropdown-item" id="save-json" href="#">Save Donor JSON</a>
+                                    <a class="dropdown-item" id="save-xml" href="#">Save Donor XML</a>
+                                    <a class="dropdown-item" id="save-image" href="#">Save to image</a>
+                                </div>
                             </li>
+
+                            <!-- <li class="nav-item" id="save-json">
+                                <a class="nav-link" href="#">Save Donor JSON</a>
+                            </li>Graph
                             <li class="nav-item" id="save-xml">
                                 <a class="nav-link" href="#">Save Donor XML</a>
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
                 </nav>
