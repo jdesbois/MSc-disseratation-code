@@ -42,7 +42,7 @@ network.on('click', (params) => {
 function displaySelectedNodeInfo(params) {
     let node = nodes.get(params['nodes'][0])
     let innerString = `Donor: ${node['id']} Patient: ${node['patient']} Donor age: ${node['dage']}`
-    if (window.currentDataObj['data'][params['nodes'][0]]['altruistic']) {
+    if (nodes.get(params['nodes'][0])['label'].split("").pop() === "A") {
         innerString += ` Altruistic: True`
     } else {
         innerString += ` Altruistic: False`
@@ -202,6 +202,41 @@ const saveJSON = document.getElementById('save-json').addEventListener('click', 
 })
 
 /**
+ * Function: Assigns event listener to save to Image button
+ * Makes a fetch post request to backend
+ * Receives a file to download in response
+ * Creates a link element
+ * Assigns URL
+ * Assigns Download
+ * Triggers click event to download file
+ */
+const saveImageButton = document.getElementById('save-image').addEventListener('click', () => {
+    const url = '/save-img'
+    let canvas = window.network.canvas.frame.canvas
+    let imgURL = canvas.toDataURL('image/png')
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json, text/plain',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            img: imgURL
+        })
+    })
+    .then(response => response.blob())
+    .then(blob => {
+        const newURL = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = newURL
+        a.download = 'graphIMG.png' || 'download'
+        a.click()
+    })
+    
+})
+
+
+/**
  * Function: Sets current data pool object to null
  * Clears out nodes and edges dataset 
  */
@@ -213,7 +248,9 @@ deleteGraph.addEventListener('click', () => {
 })
 
 
-
+/**
+ * TESTING AREA FUNCTION TO BE REMOVED
+ */
 const testXMLConvert = document.getElementById('convert-to-xml')
 testXMLConvert.addEventListener('click', () => {
     let returnedItem = nodes.get({
@@ -224,23 +261,3 @@ testXMLConvert.addEventListener('click', () => {
     console.log(returnedItem)
 })
 
-
-const saveImageButton = document.getElementById('save-image').addEventListener('click', () => {
-    const url = '/save-img'
-    let canvas = network.canvas.frame.canvas
-    let context = canvas.getContext('2d')
-    context.fillStyle = '#FFF'
-    context.fillRect(0, 0, canvas.width, canvas.height)
-    let imgURL = canvas.toDataURL('image/jpeg')
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json, text/plain',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            img: imgURL
-        })
-    })
-    
-})

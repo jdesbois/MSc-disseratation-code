@@ -49,7 +49,7 @@ const defaultOptions = {
         shape: 'dot',
         color: {
             background: 'white',
-            highlight: 'green',
+            highlight: '#EBE84A',
         },
         size: 15,
         font: {
@@ -88,13 +88,30 @@ const defaultOptions = {
         selectable: true,
     },
     layout: {
-    //     randomSeed: 150,
+        randomSeed: 2,
         improvedLayout: true,
     //     // clusterThreshold: 12,
     }
 }
 // Creation of graph canvas (known as network by library) 
 var network = new vis.Network(networkContainer, data, defaultOptions)
+
+/**
+ * Event Listener: Before drawing content to the canvas it saves state
+ * Fills the backgroud white
+ * Redraws network
+ * This to produce a white background for when an image of the network is saved
+ */
+network.on("beforeDrawing", function(ctx) {
+    ctx.save()
+
+    ctx.setTransform(1, 0, 0, 1, 0, 0)
+
+    ctx.fillStyle="#FFFFFF"
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+
+    ctx.restore()
+})
 
 /**
  * Function that takes entries from JSON object as parameter
@@ -119,7 +136,7 @@ function buildNetwork(jsonObj) {
         layoutPhysics()
     }
 
-    setColourOptions()    
+    // setColourOptions()    
 
     nodes.update(nodesArray)
     edges.add(edgesArray)
@@ -135,7 +152,7 @@ function createNodes(entries) {
     nodeArray = []
     for (const node of entries) {
         nodeArray.push({ 
-            id: node[0], 
+            id: node[0],
             'dage': node[1]['dage'], 
             label: "D" + node[0] + (node[1]['sources'] ? "P"+node[1]['sources'][0] : "A"),
             patient: (node[1]['sources'] ? node[1]['sources'][0] : "na")
@@ -157,17 +174,25 @@ function createEdges(entries) {
     for (const node of entries) {
         if (node[1]['matches']) {
             for (const edge of node[1]['matches']) {
-                console.log(nodes.get({
-                    filter: function(item){
-                        return (item['patient'] == 2)
+                let recipientNode = nodes.get({
+                    filter: function(item) {
+                        return (item['patient'] == edge['recipient'])
                     }
-                }))
-                let edgeObject = {
-                    id: node[0] + "-" + edge['recipient'], 
-                    from: node[0], 
-                    to: edge['recipient'], 
-                    score: edge['score']}
-                edgeArray.push(edgeObject)
+                })
+                // console.log(recipientNode.length)
+                for (let i=0; i<recipientNode.length; i++) {
+                    let edgeObject = {
+                        id: node[0] + "-" + recipientNode[i]['id'], 
+                        from: node[0], 
+                        to: recipientNode[i]['id'], 
+                        score: edge['score']
+                    }
+                    // console.log(edgeObject)
+                    edgeArray.push(edgeObject)
+                }
+                // console.log(node)
+
+
             }
         }
     }
@@ -280,7 +305,7 @@ function plotMatches(data) {
         edgeArray = edgeArray.concat(colorEdges(currentCycle))
     }
 
-    network.setOptions( {physics: true} )
+    // network.setOptions( {physics: true} )
     nodes.update(nodeArray)   
     edges.update(edgeArray)
 }
@@ -310,7 +335,11 @@ function colorNodes(cycle) {
 function colorNode(node) {
     let coloredNode = {}
     let layout = document.getElementById('layoutSelect')
-    let nodeID = node['d'].toString()
+
+    let returnedNode = queryNodesDataForID(node)
+    console.log(returnedNode)
+
+    let nodeID = returnedNode.id
     let x = nodes.get(nodeID)['x']
     let y = nodes.get(nodeID)['y']
 
@@ -323,11 +352,11 @@ function colorNode(node) {
 
     if (node['a']) {
         coloredNode.color = {
-            background: document.getElementById('node-highlight').value
+            background: '#61C962',
         }
     } else {
         coloredNode.color = {
-            background: document.getElementById('matched-color').value
+            background: '#30AFBF',
         }
     }
 
@@ -359,31 +388,58 @@ function colorEdges(cycle) {
     let edgeArray = []
     // Color options for the matched edges
     let edgeOptions = {
-        color: document.getElementById('edge-color').value,
+        color: '#E77D06',
         highlight: '#42f59e',
         opacity: 1,
     }
+    let cycleNodeIDsArray = getCycleNodeIDs(cycle)
+    // console.log(cycleNodeIDsArray)
     // Logic for a 3 way exchange
-    if (cycle.length == 3) {
-        let edge1 = cycle[0]['d']+"-"+cycle[1]['d'];
-        let edge2 = cycle[1]['d']+"-"+cycle[2]['d'];
-        let edge3 = cycle[2]['d']+"-"+cycle[0]['d'];                            
-
+    if (cycleNodeIDsArray.length == 3) {
+        let edge1 = cycleNodeIDsArray[0]+"-"+cycleNodeIDsArray[1];
+        let edge2 = cycleNodeIDsArray[1]+"-"+cycleNodeIDsArray[2];
+        let edge3 = cycleNodeIDsArray[2]+"-"+cycleNodeIDsArray[0];                            
+        
         edgeArray.push({id: edge1, color: edgeOptions,
             width: 5,}, {id: edge2, color: edgeOptions,
             width: 5,}, {id: edge3, color: edgeOptions,
             width: 5,})
     // Logic for a two way exchange
     
-    } else if (cycle.length == 2) {
-        let edge1 = cycle[0]['d']+"-"+cycle[1]['d'];
-        let edge2 = cycle[1]['d']+"-"+cycle[0]['d'];
+    } else if (cycleNodeIDsArray.length == 2) {
+        let edge1 = cycleNodeIDsArray[0]+"-"+cycleNodeIDsArray[1];
+        let edge2 = cycleNodeIDsArray[1]+"-"+cycleNodeIDsArray[0];
 
         edgeArray.push({id: edge1, color: edgeOptions,
             width: 5,}, {id: edge2, color: edgeOptions,
             width: 5,})
     }
     return edgeArray
+}
+
+function getCycleNodeIDs(cycle) {
+    let cycleNodeIDs = []
+    for (let i=0; i<cycle.length; i++) {
+        cycleNodeIDs.push(queryNodesDataForID(cycle[i]).id)
+    }
+    console.log(cycleNodeIDs)
+    return cycleNodeIDs
+}
+
+/**
+ * Function: Queries the nodes dataset and matches donor/patient id's in order to get unique node
+ * @param {*} node 
+ */
+function queryNodesDataForID(node) {
+
+    let returnedNode = nodes.get({
+        filter: function(item) {
+            // console.log(`noded: ${node.d} patient:${node.p} item id: ${item.id} item patient: ${item.patient}`)
+            return (node.d == item.id && (node.p == item.patient || node.a == true))
+        }
+    })
+
+    return returnedNode[0]
 }
 
 /**
@@ -407,17 +463,21 @@ function buildJSONObject() {
  * @param {*} donorID 
  * @param {*} donorAge 
  */
-function addDonorToJSON(donorID, donorAge) {
+function addDonorToJSON(nodeData) {
     //Checks if JSON object exists, creates blank one if not
+    let donorID = parseInt(nodeData.id)
+    let patient = parseInt(nodeData.patient)
+    let donorAge = nodeData['dage']
+
     if(window.currentDataObj === null) {
         window.currentDataObj = buildJSONObject();
     }
     // Checks if the donor ID passed is currently in donor pool
     if (currentDataObj['data'].hasOwnProperty(donorID)) {
         console.log("Donor ID Exists: Updating instead")
-        currentDataObj['data'][donorID] = createJSONDonor(donorID, donorAge)
+        currentDataObj['data'][donorID] = createJSONDonor(patient, donorAge)
     } else {
-        currentDataObj['data'][donorID] = createJSONDonor(donorID, donorAge)
+        currentDataObj['data'][donorID] = createJSONDonor(patient, donorAge)
     }
 
     // currentDataObj['data'][donorID] = createJSONDonor(donorID, donorAge)
@@ -438,9 +498,9 @@ function addAltruisticDonor(donorID) {
  * @param {*} id 
  * @param {*} dage 
  */
-function createJSONDonor(id, dage) {
+function createJSONDonor(patient, dage) {
     let obj = {
-        "sources": [id],
+        "sources": [patient],
         "dage": dage,
     }
     return obj
@@ -456,14 +516,16 @@ function addNodeToGraph(nodeData, callback) {
     let donorAge = parseInt(document.getElementById('donor-age-input').value)
     console.log(typeof nodeID)
     nodeData.id = nodeID
+    nodeData.patient = document.getElementById('patient-input').value
     nodeData['dage'] = donorAge
-    nodeData['label'] = nodeID
+    nodeData['label'] = `D${nodeData.id}P${nodeData.patient}`
     //Calls function to add node to JSON object
-    addDonorToJSON(parseInt(nodeID), donorAge)
+    addDonorToJSON(nodeData)
     if (document.getElementById('altruistic-input').checked) {
         addAltruisticDonor(nodeData.id)
+        nodeData['label'] = `D${nodeData.id}A`
         nodeData.color = {
-            color: document.getElementById('node-highlight').value
+            color: document.getElementById('node-highlight').value,
         }
     }
     try {

@@ -57,12 +57,12 @@ app.post('/save-img', async(req, res) => {
     let imgData = uri.split(';base64,').pop()
     // console.log(uri)
     try {
-        fs.writeFile(`${__dirname}/public/data/graphIMG.jpeg`, imgData, { encoding: 'base64'})
+        await fs.writeFile(`${__dirname}/public/data/graphIMG.png`, imgData, { encoding: 'base64'})
     } catch (err) {
         console.log(err)
     }
     
-
+    res.download(`${__dirname}/public/data/graphIMG.png`)
     
 })
 

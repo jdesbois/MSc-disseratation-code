@@ -45,15 +45,19 @@
                 <div class="modal-body">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text">Pair ID:</span>
+                            <span class="input-group-text">Donor ID:</span>
                         </div>
                         <input type="number" class="form-control" id="id-input" value="0">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Patient ID:</span>
+                        </div>
+                        <input type="number" class="form-control" id="patient-input" value="0">
+                    </div>
+                    <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text">Donor Age:</span>
                         </div>
                         <input type="number" class="form-control" id="donor-age-input" value="0">
-                    </div>
-                    <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
                                 <input type="checkbox" id="altruistic-input" name="altruistic" vale="altruistic">
@@ -200,13 +204,13 @@
                             <option value="circle">Circle</option>
                         </select>
                     </div>
-                    <div class="input-group input-group-sm mb-3">
+                    <!-- <div class="input-group input-group-sm mb-3">
                         <div class="input-group-prepend">
                             <label class="input-group-text" for="node-color">Node colour</label>
                         </div>
                         <input class="form-control" id="node-color" type="color" value="#30afbf">
-                    </div>
-                    <div class="input-group input-group-sm mb-3">
+                    </div> -->
+                    <!-- <div class="input-group input-group-sm mb-3">
                         <div class="input-group-prepend"><label class="input-group-text" for="node-highlight">Altruistic Donor</label></div>
                         <input class="form-control" id="node-highlight" type="color" value="#61c962">
                     </div>
@@ -220,8 +224,8 @@
                     </div>
                     <div class="input-group input-group-sm mb-3">
                         <div class="input-group-prepend"><label class="input-group-text" for="edge-highlight">Edge highlight</label></div>
-                        <input class="form-control" id="edge-highlight" type="color" value="#f5e320">
-                    </div>
+                        <input class="form-control" id="edge-highlight" type="color" value="#f5e320"> -->
+                    <!-- </div> -->
                     <button class="btn btn-info" id="set-layout-options">Set</button>
                 </div>
                 <br />
