@@ -49,7 +49,7 @@ const defaultOptions = {
         shape: 'dot',
         color: {
             background: 'white',
-            highlight: 'green',
+            highlight: '#EBE84A',
         },
         size: 15,
         font: {
@@ -88,13 +88,30 @@ const defaultOptions = {
         selectable: true,
     },
     layout: {
-    //     randomSeed: 150,
+        randomSeed: 2,
         improvedLayout: true,
     //     // clusterThreshold: 12,
     }
 }
 // Creation of graph canvas (known as network by library) 
 var network = new vis.Network(networkContainer, data, defaultOptions)
+
+/**
+ * Event Listener: Before drawing content to the canvas it saves state
+ * Fills the backgroud white
+ * Redraws network
+ * This to produce a white background for when an image of the network is saved
+ */
+network.on("beforeDrawing", function(ctx) {
+    ctx.save()
+
+    ctx.setTransform(1, 0, 0, 1, 0, 0)
+
+    ctx.fillStyle="#FFFFFF"
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+
+    ctx.restore()
+})
 
 /**
  * Function that takes entries from JSON object as parameter
@@ -119,7 +136,7 @@ function buildNetwork(jsonObj) {
         layoutPhysics()
     }
 
-    setColourOptions()    
+    // setColourOptions()    
 
     nodes.update(nodesArray)
     edges.add(edgesArray)
@@ -288,7 +305,7 @@ function plotMatches(data) {
         edgeArray = edgeArray.concat(colorEdges(currentCycle))
     }
 
-    network.setOptions( {physics: true} )
+    // network.setOptions( {physics: true} )
     nodes.update(nodeArray)   
     edges.update(edgeArray)
 }
@@ -318,8 +335,11 @@ function colorNodes(cycle) {
 function colorNode(node) {
     let coloredNode = {}
     let layout = document.getElementById('layoutSelect')
-    // console.log(node)
-    let nodeID = node['d'].toString()
+
+    let returnedNode = queryNodesDataForID(node)
+    console.log(returnedNode)
+
+    let nodeID = returnedNode.id
     let x = nodes.get(nodeID)['x']
     let y = nodes.get(nodeID)['y']
 
@@ -332,11 +352,11 @@ function colorNode(node) {
 
     if (node['a']) {
         coloredNode.color = {
-            background: document.getElementById('node-highlight').value
+            background: '#61C962',
         }
     } else {
         coloredNode.color = {
-            background: document.getElementById('matched-color').value
+            background: '#30AFBF',
         }
     }
 
@@ -368,31 +388,58 @@ function colorEdges(cycle) {
     let edgeArray = []
     // Color options for the matched edges
     let edgeOptions = {
-        color: document.getElementById('edge-color').value,
+        color: '#E77D06',
         highlight: '#42f59e',
         opacity: 1,
     }
+    let cycleNodeIDsArray = getCycleNodeIDs(cycle)
+    // console.log(cycleNodeIDsArray)
     // Logic for a 3 way exchange
-    if (cycle.length == 3) {
-        let edge1 = cycle[0]['d']+"-"+cycle[1]['d'];
-        let edge2 = cycle[1]['d']+"-"+cycle[2]['d'];
-        let edge3 = cycle[2]['d']+"-"+cycle[0]['d'];                            
-
+    if (cycleNodeIDsArray.length == 3) {
+        let edge1 = cycleNodeIDsArray[0]+"-"+cycleNodeIDsArray[1];
+        let edge2 = cycleNodeIDsArray[1]+"-"+cycleNodeIDsArray[2];
+        let edge3 = cycleNodeIDsArray[2]+"-"+cycleNodeIDsArray[0];                            
+        
         edgeArray.push({id: edge1, color: edgeOptions,
             width: 5,}, {id: edge2, color: edgeOptions,
             width: 5,}, {id: edge3, color: edgeOptions,
             width: 5,})
     // Logic for a two way exchange
     
-    } else if (cycle.length == 2) {
-        let edge1 = cycle[0]['d']+"-"+cycle[1]['d'];
-        let edge2 = cycle[1]['d']+"-"+cycle[0]['d'];
+    } else if (cycleNodeIDsArray.length == 2) {
+        let edge1 = cycleNodeIDsArray[0]+"-"+cycleNodeIDsArray[1];
+        let edge2 = cycleNodeIDsArray[1]+"-"+cycleNodeIDsArray[0];
 
         edgeArray.push({id: edge1, color: edgeOptions,
             width: 5,}, {id: edge2, color: edgeOptions,
             width: 5,})
     }
     return edgeArray
+}
+
+function getCycleNodeIDs(cycle) {
+    let cycleNodeIDs = []
+    for (let i=0; i<cycle.length; i++) {
+        cycleNodeIDs.push(queryNodesDataForID(cycle[i]).id)
+    }
+    console.log(cycleNodeIDs)
+    return cycleNodeIDs
+}
+
+/**
+ * Function: Queries the nodes dataset and matches donor/patient id's in order to get unique node
+ * @param {*} node 
+ */
+function queryNodesDataForID(node) {
+
+    let returnedNode = nodes.get({
+        filter: function(item) {
+            // console.log(`noded: ${node.d} patient:${node.p} item id: ${item.id} item patient: ${item.patient}`)
+            return (node.d == item.id && (node.p == item.patient || node.a == true))
+        }
+    })
+
+    return returnedNode[0]
 }
 
 /**
