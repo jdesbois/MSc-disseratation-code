@@ -28,11 +28,15 @@ async function makeMatchingRequest(donorPool, operation, chainLength) {
 
     }
 
-    await fetch(url, fetchData).then((response) =>  {
+    await fetch(url, fetchData)
+    .then((response) =>  {
         if (response.ok) {
+            console.log(response)
             result = response.json()
         } else {
             console.log(response)
+            callAlertBanner(response)
+            
         }
     })
 

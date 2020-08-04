@@ -32,34 +32,29 @@ const defaultOptions = {
         editNode: function(nodeData, callback) {
             document.getElementById('id-input').value = nodeData.id
             document.getElementById('donor-age-input').value = nodeData.dage
+            document.getElementById('patient-input').value = nodeData.patient
             $('#nodeModal').modal('show')
             document.getElementById('saveNodeButton').onclick = addNodeToGraph.bind(this, nodeData, callback)
         },
-        // editEdge: function(edgeData, callback) {
-        //     console.log(edgeData)
-        //     $('#edgeModal').modal('show')
-        //     document.getElementById('saveEdgeButton').onclick = addEdgeFunction.bind(this, edgeData, callback)
-        // },
+        editEdge: false,
         deleteNode: function(nodeData, callback) {
             delete currentDataObj['data'][nodeData['nodes'][0]]
-            callback(data)
+            callback(nodeData)
         }
     },
     nodes: {
-        shape: 'dot',
+        shape: 'circle',
         color: {
             background: 'white',
             highlight: '#EBE84A',
         },
-        size: 15,
+        size: 20,
         font: {
-            size: 30,
-            align: 'left',
+            size: 12,
         },
         scaling: {
             label: {
                 enabled: true,
-
             }
         },
         labelHighlightBold: true,
@@ -154,7 +149,7 @@ function createNodes(entries) {
         nodeArray.push({ 
             id: node[0],
             'dage': node[1]['dage'], 
-            label: "D" + node[0] + (node[1]['sources'] ? "P"+node[1]['sources'][0] : "A"),
+            label: " D" + node[0] + " \n " + (node[1]['sources'] ? "P"+node[1]['sources'][0] +" " : " A "),
             patient: (node[1]['sources'] ? node[1]['sources'][0] : "na")
         })
     }
@@ -179,7 +174,7 @@ function createEdges(entries) {
                         return (item['patient'] == edge['recipient'])
                     }
                 })
-                // console.log(recipientNode.length)
+                console.log(recipientNode.length)
                 for (let i=0; i<recipientNode.length; i++) {
                     let edgeObject = {
                         id: node[0] + "-" + recipientNode[i]['id'], 
@@ -293,7 +288,7 @@ network.on("stabilized", () => {
 function plotMatches(data) {
     // Resets current graph to pre-matching request
     buildNetwork(currentDataObj)
-    console.log(data)
+
     let nodeArray = []
     let edgeArray = []
     let exchanges = data['output']['exchange_data'][0]['exchanges']
@@ -337,7 +332,6 @@ function colorNode(node) {
     let layout = document.getElementById('layoutSelect')
 
     let returnedNode = queryNodesDataForID(node)
-    console.log(returnedNode)
 
     let nodeID = returnedNode.id
     let x = nodes.get(nodeID)['x']
@@ -472,6 +466,7 @@ function addDonorToJSON(nodeData) {
     if(window.currentDataObj === null) {
         window.currentDataObj = buildJSONObject();
     }
+
     // Checks if the donor ID passed is currently in donor pool
     if (currentDataObj['data'].hasOwnProperty(donorID)) {
         console.log("Donor ID Exists: Updating instead")
@@ -518,14 +513,14 @@ function addNodeToGraph(nodeData, callback) {
     nodeData.id = nodeID
     nodeData.patient = document.getElementById('patient-input').value
     nodeData['dage'] = donorAge
-    nodeData['label'] = `D${nodeData.id}P${nodeData.patient}`
+    nodeData['label'] = ` D${nodeData.id} \n P${nodeData.patient} `
     //Calls function to add node to JSON object
     addDonorToJSON(nodeData)
     if (document.getElementById('altruistic-input').checked) {
         addAltruisticDonor(nodeData.id)
-        nodeData['label'] = `D${nodeData.id}A`
+        nodeData['label'] = ` D${nodeData.id} \n A `
         nodeData.color = {
-            color: document.getElementById('node-highlight').value,
+            color: 'blue',
         }
     }
     try {
@@ -555,6 +550,12 @@ function addEdgeFunction(edgeData, callback) {
     let edgeID = edgeData['from'] + "-" + edgeData['to']
     edgeData.id = edgeID
     edgeData.score = score
+    if (currentDataObj['data'][edgeTo]['altruistic']) {
+        callAlertBanner("Cannot add edge directed to Altruistic Donor")
+        $('#edgeModal').modal('hide')
+        return
+    }
+
     try {
         console.log("adding edge to graph and JSON")
         addEdgeToJSON(score, edgeFrom, edgeTo)

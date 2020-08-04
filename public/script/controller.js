@@ -84,7 +84,7 @@ matchingRequestButton.addEventListener('click', () => {
     let chainLength = chainSelect.value
     makeMatchingRequest(currentDataObj, operation, chainLength).then(data => {
         if (currentDataObj === null) {
-            callAlertBanner("No donor pool present")
+            callAlertBanner("No graph data present")
             return
         }
         window.matchingObj = data
@@ -260,4 +260,14 @@ testXMLConvert.addEventListener('click', () => {
     })
     console.log(returnedItem)
 })
-
+/**
+ * Not in use yet - working out logic
+ */
+function checkDataBeforeSave() {
+    if (window.currentDataObj == null) {
+        callAlertBanner("No data currently present to save, please build a graph first!")
+        return false
+    } else {
+        return true
+    }
+}
