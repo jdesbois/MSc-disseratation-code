@@ -69,4 +69,4 @@ app.post('/save-img', async(req, res) => {
     
 })
 
-app.listen(process.env.port || 3000, () => console.log(`Application running and listening at http://localhost:${port}`))
+app.listen(process.env.port || 3000)
