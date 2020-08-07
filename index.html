@@ -260,8 +260,8 @@
             </div> <!-- End of control panel-->
         </div> <!-- End of graph/control row-->
         <!--Selected Item row-->
-        <div class="row">
-            <div class="col-lg-12">
+        <!-- <div class="row">
+            <div class="col-lg-4">
                 <div class="card"  id="selected-item-info">
                     <h6 class="card-header">Selected Node/Edge Info</h6>
                     <div class="card-body">
@@ -270,12 +270,21 @@
                     </div>
                   </div>
             </div>
-        </div>
+        </div> -->
         <br />
         <!-- End of Selected Item Row -->
         <!--Footer content-->
         <div class="row" id="stats-container">
-            <div class="col-lg-6">
+            <div class="col-lg-4">
+                <div class="card text-center"  id="selected-item-info">
+                    <h5 class="card-header">Selected Node/Edge Info</h5>
+                    <div class="card-body">
+                        <span id="selected-item-display"></span>
+
+                    </div>
+                  </div>
+            </div>
+            <div class="col-lg-4">
                 <div class="card" id="desc-card">
                     <h5 class="card-header">
                         Matching Criteria
@@ -285,7 +294,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-4">
                 <div class="card text-center" id="exchange-data-card">
                     <h5 class="card-header">
                         Exchange Data
@@ -329,6 +338,7 @@
     <script type="text/javascript" src="/public/script/controller.js"></script>
     <script type="text/javascript" src="/public/script/xmlInputParser.js"></script>
     <script type="text/javascript" src="/public/script/xmlDOMOutputParser.js"></script>
+    <script type="text/javascript" src="/public/script/randomGraphGenerator.js"></script>
 </body>
 
 

@@ -33,9 +33,13 @@ input[type="file"] {
     margin-bottom: 5px;
 }
 
-#desc-card {
+.card {
     height: 100%;
 }
+
+/* #desc-card {
+    height: 100%;
+} */
 /* Control panel styling */
 
 
@@ -47,8 +51,8 @@ input[type="file"] {
 }
 
 /* Selected item info panel */
-#selected-item-info {
-    min-height: 125px;
-}
+/* #selected-item-info {
+    min-height: 145px;
+} */
 
 

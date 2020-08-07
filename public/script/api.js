@@ -10,11 +10,11 @@
  */
 
 async function makeMatchingRequest(donorPool, operation, chainLength) {
-
+    // Matching algorithm URL
     var url = "https://kidney.optimalmatching.com/kidney/find.json"
-    
+    // Converts current donorPool into a JSON Strind
     donorPool = JSON.stringify(donorPool)
-
+    // Creates object that is sent to matching algorithm URL via fetch request
     let fetchData = {
         method: 'POST',
         headers: {
@@ -27,7 +27,11 @@ async function makeMatchingRequest(donorPool, operation, chainLength) {
         }),
 
     }
-
+    /** 
+     * Fetch request, sends data required to get optimal matching
+     * Once promise returns if response OK, converts response into JSON and returns back to controller
+     * If response not ok calls alert banner with error and prints to server console
+     */
     await fetch(url, fetchData)
     .then((response) =>  {
         if (response.ok) {

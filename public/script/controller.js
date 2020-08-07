@@ -41,13 +41,16 @@ network.on('click', (params) => {
 // Display selected node information
 function displaySelectedNodeInfo(params) {
     let node = nodes.get(params['nodes'][0])
-    let innerString = `Donor: ${node['id']} Patient: ${node['patient']} Donor age: ${node['dage']}`
+    let innerString = `Donor: ${node['id']}<br/>
+                       Patient: ${node['patient']}<br/>
+                       Donor age: ${node['dage']}<br/>`;
+
     if (nodes.get(params['nodes'][0])['label'].split("").pop() === "A") {
-        innerString += ` Altruistic: True`
+        innerString += "\nAltruistic: True"
     } else {
-        innerString += ` Altruistic: False`
+        innerString += "\nAltruistic: False"
     }
-    // innerString += ` Patient: ${node['patient']}`
+
     document.getElementById('selected-item-display').innerHTML = innerString
 }
 
@@ -63,6 +66,10 @@ function clearSelectionInfo() {
 }
 
 // Reset graph button logic
+/**
+ * Event listener for reset graph button
+ * Calls buildnetork function on current data obj
+ */
 const resetButton = document.getElementById('reset-button')
 resetButton.addEventListener('click', () => {
     buildNetwork(currentDataObj)
@@ -71,7 +78,7 @@ resetButton.addEventListener('click', () => {
 // Set Colour button logic 
 const setLayoutButton = document.getElementById('set-layout-options')
 setLayoutButton.addEventListener('click', () => {
-    setColourOptions()
+    buildNetwork(currentDataObj)
 })
 
 // Matching request button logic
@@ -82,11 +89,16 @@ const chainSelect = document.getElementById('chainSelect')
 matchingRequestButton.addEventListener('click', () => {
     let operation = operationSelect.value
     let chainLength = chainSelect.value
-    makeMatchingRequest(currentDataObj, operation, chainLength).then(data => {
-        if (currentDataObj === null) {
-            callAlertBanner("No graph data present")
-            return
-        }
+    // Checks to make sure there is current data to send to algorithm
+    if (currentDataObj === null) {
+        callAlertBanner("No graph data present")
+        return
+    }
+    // Calls matching request function with selected criteria and current data object
+    makeMatchingRequest(currentDataObj, operation, chainLength)
+    //Once promise returns, the matching data is assigned to the global matching object
+    //Plot matches and update description is then called
+    .then(data => {
         window.matchingObj = data
         plotMatches(data)
         updateDescriptionData(data['output']['exchange_data'][0])
@@ -94,6 +106,13 @@ matchingRequestButton.addEventListener('click', () => {
 })
 
 // File upload button logic
+/**
+ * Function: Assigns an event listener to the file selection button
+ * When the file selection button has changed i.e. user selected a file
+ * FileReader is created, file type found and a load event is created on file reader
+ * Once the file is loaded/read it is passed to the relevant parser to be converted to a workable object
+ * read as Text is then called on file read with file name in order to trigger event
+ */
 const fileSelection = document.getElementById('file-selector')
 fileSelection.addEventListener('change', (event) => {
     const reader = new FileReader();
@@ -114,8 +133,11 @@ fileSelection.addEventListener('change', (event) => {
     reader.readAsText(event.target.files[0])
 
 })
-
-// Function: Updates the matching algorithm status data
+/**
+ * 
+ * Function: Updates the matching algorithm status data
+ * @param {*} exchange_data 
+ */
 function updateDescriptionData(exchange_data) {
     const matchingDesc = document.getElementById('matching-desc')
     matchingDesc.innerHTML = exchange_data['description']
@@ -135,13 +157,7 @@ function updateDescriptionData(exchange_data) {
     console.log(exchange_data)
 }
 
-const printObject = document.getElementById('print-obj').addEventListener('click', () => {
-    console.log(window.currentDataObj);
-})
 
-const addNode = document.getElementById('add-to-obj').addEventListener('click', ()=> {
-
-})
 
 /**
  * Function: Assigns event listener to Save XML nav entry
@@ -260,6 +276,15 @@ testXMLConvert.addEventListener('click', () => {
     })
     console.log(returnedItem)
 })
+
+const printObject = document.getElementById('print-obj').addEventListener('click', () => {
+    console.log(window.currentDataObj);
+})
+
+const addNode = document.getElementById('add-to-obj').addEventListener('click', ()=> {
+    generateRandomGraph(25)
+})
+
 /**
  * Not in use yet - working out logic
  */
@@ -271,3 +296,4 @@ function checkDataBeforeSave() {
         return true
     }
 }
+

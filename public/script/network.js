@@ -174,7 +174,7 @@ function createEdges(entries) {
                         return (item['patient'] == edge['recipient'])
                     }
                 })
-                console.log(recipientNode.length)
+                // console.log(recipientNode.length)
                 for (let i=0; i<recipientNode.length; i++) {
                     let edgeObject = {
                         id: node[0] + "-" + recipientNode[i]['id'], 
@@ -416,7 +416,7 @@ function getCycleNodeIDs(cycle) {
     for (let i=0; i<cycle.length; i++) {
         cycleNodeIDs.push(queryNodesDataForID(cycle[i]).id)
     }
-    console.log(cycleNodeIDs)
+    
     return cycleNodeIDs
 }
 
@@ -476,7 +476,7 @@ function addDonorToJSON(nodeData) {
     }
 
     // currentDataObj['data'][donorID] = createJSONDonor(donorID, donorAge)
-    console.log(currentDataObj)
+    // console.log(currentDataObj)
 }
 /**
  * Function: Removes sources from selected donorID
