@@ -1,6 +1,5 @@
 const express = require('express')
 const app = express()
-const port = 3000
 const path = require('path')
 const cookieParser = require('cookie-parser')
 const fs = require('fs').promises;
@@ -69,4 +68,4 @@ app.post('/save-img', async(req, res) => {
     
 })
 
-app.listen(process.env.port || 3000)
+app.listen(process.env.PORT || 3000)
