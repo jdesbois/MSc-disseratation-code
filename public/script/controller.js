@@ -42,7 +42,7 @@ network.on('click', (params) => {
 function displaySelectedNodeInfo(params) {
     let node = nodes.get(params['nodes'][0])
     let innerString = `Donor: ${node['id']}<br/>
-                       Patient: ${node['patient']}<br/>
+                       Recipient: ${node['patient']}<br/>
                        Donor age: ${node['dage']}<br/>`;
 
     if (nodes.get(params['nodes'][0])['label'].split("").pop() === "A") {
@@ -73,6 +73,23 @@ function clearSelectionInfo() {
 const resetButton = document.getElementById('reset-button')
 resetButton.addEventListener('click', () => {
     buildNetwork(currentDataObj)
+})
+
+/**
+ * Random graph nav button logic
+ * Adds event listener to nav bar button
+ * Adds event listener to Save Button
+ * Takes num of nodes input 
+ * Calls generate random graph
+ */
+const randomGraphButton = document.getElementById('randomGraph-button')
+randomGraphButton.addEventListener('click', () => {
+    $('#random-graph-modal').modal('show')
+    document.getElementById('randomGraphSave').addEventListener('click', () => {
+        let numOfNodes = document.getElementById('num-of-nodes-input').value
+        generateRandomGraph(numOfNodes)
+        $('#random-graph-modal').modal('hide')
+    })
 })
 
 // Set Colour button logic 
@@ -269,20 +286,15 @@ deleteGraph.addEventListener('click', () => {
  */
 const testXMLConvert = document.getElementById('convert-to-xml')
 testXMLConvert.addEventListener('click', () => {
-    let returnedItem = nodes.get({
-        filter: function(item) {
-            return (item.patient == 2)
-        }
-    })
-    console.log(returnedItem)
+    network.disableEditMode()
 })
 
 const printObject = document.getElementById('print-obj').addEventListener('click', () => {
-    console.log(window.currentDataObj);
+    network.addEdgeMode()
 })
 
 const addNode = document.getElementById('add-to-obj').addEventListener('click', ()=> {
-    generateRandomGraph(25)
+    $('#random-graph-modal').modal('show')
 })
 
 /**

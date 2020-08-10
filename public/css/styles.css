@@ -51,8 +51,8 @@ input[type="file"] {
 }
 
 /* Selected item info panel */
-/* #selected-item-info {
-    min-height: 145px;
-} */
+.card {
+    min-height: 175px;
+}
 
 

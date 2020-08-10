@@ -149,7 +149,7 @@ function createNodes(entries) {
         nodeArray.push({ 
             id: node[0],
             'dage': node[1]['dage'], 
-            label: " D" + node[0] + " \n " + (node[1]['sources'] ? "P"+node[1]['sources'][0] +" " : " A "),
+            label: " D" + node[0] + " \n " + (node[1]['sources'] ? "R"+node[1]['sources'][0] +" " : " A "),
             patient: (node[1]['sources'] ? node[1]['sources'][0] : "na")
         })
     }
@@ -513,7 +513,7 @@ function addNodeToGraph(nodeData, callback) {
     nodeData.id = nodeID
     nodeData.patient = document.getElementById('patient-input').value
     nodeData['dage'] = donorAge
-    nodeData['label'] = ` D${nodeData.id} \n P${nodeData.patient} `
+    nodeData['label'] = ` D${nodeData.id} \n R${nodeData.patient} `
     //Calls function to add node to JSON object
     addDonorToJSON(nodeData)
     if (document.getElementById('altruistic-input').checked) {
@@ -560,6 +560,7 @@ function addEdgeFunction(edgeData, callback) {
         console.log("adding edge to graph and JSON")
         addEdgeToJSON(score, edgeFrom, edgeTo)
         callback(edgeData)
+        network.addEdgeMode()
     } catch (err) {
         console.log(err.message)
         callAlertBanner(err.message)

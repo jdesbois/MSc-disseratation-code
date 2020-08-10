@@ -121,6 +121,11 @@ function flipACoin() {
     }
 }
 
+function oneInThree() {
+    let num = Math.floor(Math.random() * 3) + 1
+    return num
+}
+
 /**
  * Generates a random edge score between 
  * 1 -100
