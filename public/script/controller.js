@@ -87,7 +87,8 @@ randomGraphButton.addEventListener('click', () => {
     $('#random-graph-modal').modal('show')
     document.getElementById('randomGraphSave').addEventListener('click', () => {
         let numOfNodes = document.getElementById('num-of-nodes-input').value
-        generateRandomGraph(numOfNodes)
+        let density = document.getElementById('densityInput').value
+        generateRandomGraph(numOfNodes, density)
         $('#random-graph-modal').modal('hide')
     })
 })
@@ -111,6 +112,9 @@ matchingRequestButton.addEventListener('click', () => {
         callAlertBanner("No graph data present")
         return
     }
+    // Disbales run button and produces working update to show user that function is running
+    matchingRequestButton.disabled = true
+    document.getElementById('matching-request-running').innerHTML = `<strong> Working... </strong>`
     // Calls matching request function with selected criteria and current data object
     makeMatchingRequest(currentDataObj, operation, chainLength)
     //Once promise returns, the matching data is assigned to the global matching object
@@ -119,6 +123,8 @@ matchingRequestButton.addEventListener('click', () => {
         window.matchingObj = data
         plotMatches(data)
         updateDescriptionData(data['output']['exchange_data'][0])
+        matchingRequestButton.disabled = false
+        document.getElementById('matching-request-running').innerHTML = ``
     })
 })
 
@@ -177,96 +183,21 @@ function updateDescriptionData(exchange_data) {
 
 
 /**
- * Function: Assigns event listener to Save XML nav entry
- * Makes a fetch post request to backend
- * resceives file to download in response
- * Creates a link document object
- * Assigns it file download information
- * triggers click event
- */
-const saveXML = document.getElementById('save-xml').addEventListener('click', () => {
-    const url = '/save-xml'
-    
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json, text/plain',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(window.currentDataObj)
-    })
-    .then(response => response.blob())
-    .then(blob => {
-        const newURL = URL.createObjectURL(blob)
-        const a = document.createElement('a')
-        a.href = newURL
-        a.download = 'graphXML.xml' || 'download'
-        a.click()
-    })
-})
+ * Function: Assigns event listener to Save XML nav entry, calls saveXMLFile from api.js
+*/
+const saveXML = document.getElementById('save-xml').addEventListener('click', saveXMLFile)
 
 /**
- * Function: Assigns event listener to Save JSON nav entry
- * Makes a fetch post request to backend
- * resceives file to download in response
- * Creates a link document object
- * Assigns it file download information
- * triggers click event
+ * Function: Assigns event listener to Save JSON nav entry, calls saveJSONFile from api.js
+
  */
-const saveJSON = document.getElementById('save-json').addEventListener('click', () => {
-    const url = '/save-json'
-    
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json, text/plain',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(window.currentDataObj)
-    })
-    .then(response => response.blob())
-    .then(blob => {
-        const newURL = URL.createObjectURL(blob)
-        const a = document.createElement('a')
-        a.href = newURL
-        a.download = 'graphJSON.json' || 'download'
-        a.click()
-    })
-})
+const saveJSON = document.getElementById('save-json').addEventListener('click', saveJSONFile)
+
 
 /**
- * Function: Assigns event listener to save to Image button
- * Makes a fetch post request to backend
- * Receives a file to download in response
- * Creates a link element
- * Assigns URL
- * Assigns Download
- * Triggers click event to download file
+ * Function: Assigns event listener to save to Image button, calls saveImgFile from api.js
  */
-const saveImageButton = document.getElementById('save-image').addEventListener('click', () => {
-    const url = '/save-img'
-    let canvas = window.network.canvas.frame.canvas
-    let imgURL = canvas.toDataURL('image/png')
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json, text/plain',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            img: imgURL
-        })
-    })
-    .then(response => response.blob())
-    .then(blob => {
-        const newURL = URL.createObjectURL(blob)
-        const a = document.createElement('a')
-        a.href = newURL
-        a.download = 'graphIMG.png' || 'download'
-        a.click()
-    })
-    
-})
+const saveImageButton = document.getElementById('save-image').addEventListener('click', saveImgFile)
 
 
 /**
@@ -279,6 +210,7 @@ deleteGraph.addEventListener('click', () => {
     edges.clear()
     window.currentDataObj = null
 })
+
 
 
 /**

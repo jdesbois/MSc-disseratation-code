@@ -12,15 +12,21 @@
  * Generates random donor age using fucntion
  * @param {} numNodes 
  */
-function generateRandomGraph(numNodes) {
+function generateRandomGraph(numNodes, density) {
 //Generate array of random nodes
     let nodesArray = generateNodes(numNodes)
+    let densePercentage = density * 100
+    let nodePercentage = (numNodes/100) * densePercentage
+
+    console.log(nodePercentage)
 // Adds nodes to JSON object
     addNodesToJSON(nodesArray)
 // Generates random edges and adds them to JSON
-    addEdgesToJSON(generateEdges(nodesArray))
+    let edgesArray = generateEdges(nodesArray)
+    addEdgesToJSON(edgesArray)
 // Builds network from JSON object
-    buildNetwork(window.currentDataObj)
+    nodes.update(nodesArray)
+    edges.update(edgesArray)
 }
 
 /**
