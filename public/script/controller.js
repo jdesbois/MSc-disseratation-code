@@ -5,13 +5,17 @@ var matchingObj = null
 
 // Example data button logic (JQUERY since it was less complicated)
 $('#graphDropdown a').click(function() {
+    console.log($(this)[0])
     let graphSize = $(this)[0]['attributes']['value'].value
     if (graphSize === 'large') {
         currentDataObj = largeData
         buildNetwork(largeData)
-    } else {
+    } else if (graphSize === 'small') {
         currentDataObj = smallData
         buildNetwork(smallData)
+    } else {
+        currentDataObj = multipleDonor
+        buildNetwork(multipleDonor)
     }
 })
 
@@ -24,7 +28,7 @@ layoutDropdown.addEventListener('change', () => {
  * Function that deals with on click event for the graph
  */
 network.on('click', (params) => {
-    console.log(params)
+    // console.log(params)
     // Clears information display before displaying new information
     clearSelectionInfo()
 
@@ -85,17 +89,16 @@ resetButton.addEventListener('click', () => {
 const randomGraphButton = document.getElementById('randomGraph-button')
 randomGraphButton.addEventListener('click', () => {
     $('#random-graph-modal').modal('show')
-    document.getElementById('randomGraphSave').addEventListener('click', () => {
-        let numOfNodes = document.getElementById('num-of-nodes-input').value
-        let density = document.getElementById('densityInput').value
-        generateRandomGraph(numOfNodes, density)
-        $('#random-graph-modal').modal('hide')
-    })
+    document.getElementById('randomGraphSave').onclick = generateRandomGraph.bind()
 })
 
 // Set Colour button logic 
 const setLayoutButton = document.getElementById('set-layout-options')
 setLayoutButton.addEventListener('click', () => {
+    if (window.currentDataObj === null) {
+        callAlertBanner("Please build/input a graph first")
+        return
+    }
     buildNetwork(currentDataObj)
 })
 
@@ -105,6 +108,7 @@ const operationSelect = document.getElementById('operationSelect')
 const chainSelect = document.getElementById('chainSelect')
 
 matchingRequestButton.addEventListener('click', () => {
+    network.disableEditMode()
     let operation = operationSelect.value
     let chainLength = chainSelect.value
     // Checks to make sure there is current data to send to algorithm

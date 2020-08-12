@@ -12,21 +12,19 @@
  * Generates random donor age using fucntion
  * @param {} numNodes 
  */
-function generateRandomGraph(numNodes, density) {
+function generateRandomGraph() {
+    let numNodes = document.getElementById('num-of-nodes-input').value
+    let density = document.getElementById('densityInput').value
 //Generate array of random nodes
     let nodesArray = generateNodes(numNodes)
-    let densePercentage = density * 100
-    let nodePercentage = (numNodes/100) * densePercentage
-
-    console.log(nodePercentage)
 // Adds nodes to JSON object
     addNodesToJSON(nodesArray)
 // Generates random edges and adds them to JSON
-    let edgesArray = generateEdges(nodesArray)
+    let edgesArray = generateEdges(nodesArray, density)
     addEdgesToJSON(edgesArray)
 // Builds network from JSON object
-    nodes.update(nodesArray)
-    edges.update(edgesArray)
+    buildNetwork(window.currentDataObj)
+    $('#random-graph-modal').modal('hide')
 }
 
 /**
@@ -66,7 +64,7 @@ function generateNodes(numNodes) {
             id:i, 
             'dage': randomDonorAge(), 
             patient: i,
-            label: " D" + i + " \n" + "P"+i,
+            label: " D" + i + " \n" + "R"+i,
         })
     }
     return nodeArray
@@ -80,14 +78,14 @@ function generateNodes(numNodes) {
  * Return array of edges
  */
 
-function generateEdges(nodeArray) {
+function generateEdges(nodeArray, density) {
     let edgeArray = []
     for (node of nodeArray) {
         for (let i=0; i<nodeArray.length; i++) {
             if (node.id === nodeArray[i].id && node.patient === nodeArray[i].patient) {
                 continue
             }
-            if (flipACoin()) {
+            if (checkDensity(density)) {
                 edgeArray.push({
                    id: node.id +"-" + nodeArray[i].patient,
                    from: node.id,
@@ -124,6 +122,18 @@ function flipACoin() {
         return true
     } else {
         return false
+    }
+}
+
+
+
+function checkDensity(density) {
+    let randomFloat = Math.random()
+    
+    if (randomFloat > density) {
+        return false
+    } else {
+        return true
     }
 }
 

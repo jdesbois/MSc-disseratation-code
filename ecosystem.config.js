@@ -3,6 +3,7 @@ module.exports = {
     name: 'PKE graph',
     script: 'app.js',
     watch: '.',
+    autorestart: true,
     instances: 'max',
     env: {
       NODE_ENV: 'development',

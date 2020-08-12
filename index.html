@@ -9,6 +9,7 @@
     <!--Loading example data as Javascript objects-->
     <script type="text/javascript" src="/public/data/example_small_data.js"></script>
     <script type="text/javascript" src="/public/data/example_large_data.js"></script>
+    <script type="text/javascript" src="/public/data/multiple-donor-example.js"></script>
 
     <!--Package declarations-->
     <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
@@ -127,7 +128,7 @@ aria-hidden="true">
                 <div class="input-group-prepend">
                     <span class="input-group-text">Density</span>
                 </div>
-                <input type="number" class="form-control" id="densityInput" min="0" max="1" step="0.1" value="0">
+                <input type="number" class="form-control" id="densityInput" min="0" max="1" step="0.01" value="0">
             </div>
         </div>
         <div class="modal-footer">
@@ -166,6 +167,8 @@ aria-hidden="true">
                                     <a class="dropdown-item" href="#" id="small-graph" value='small'>Small Graph
                                         Example</a>
                                     <a class="dropdown-item" href="#" id="large-graph" value='large'>Large Graph
+                                        Example</a>
+                                    <a class="dropdown-item" href="#" id="large-graph" value='multiple'>Multiple Donor
                                         Example</a>
                                 </div>
                             </li>
