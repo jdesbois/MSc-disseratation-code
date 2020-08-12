@@ -49,7 +49,7 @@ function displaySelectedNodeInfo(params) {
                        Recipient: ${node['patient']}<br/>
                        Donor age: ${node['dage']}<br/>`;
 
-    if (window.currentDataObj[data][node.id]['altruistic']) {
+    if (window.currentDataObj['data'][node.id]['altruistic']) {
         innerString += "\nAltruistic: True"
     } else {
         innerString += "\nAltruistic: False"
