@@ -91,7 +91,6 @@ function generateEdges(nodeArray, density) {
                 continue
             }
             if (checkDensity(density)) {
-                console.log("egde created")
                 edgeArray.push({
                    id: node.id +"-" + nodeArray[i].patient,
                    from: node.id,

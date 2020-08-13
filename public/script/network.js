@@ -393,7 +393,9 @@ function colorEdges(cycle) {
     let options = {
         edges: {
             color: {
-                opacity: 0.4
+                inherit: false,
+                color: '#848484',
+                opacity: 0.4,
             },
             width: 0.75,
         }
