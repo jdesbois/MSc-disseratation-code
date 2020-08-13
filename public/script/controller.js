@@ -5,18 +5,16 @@ var matchingObj = null
 
 // Example data button logic (JQUERY since it was less complicated)
 $('#graphDropdown a').click(function() {
-    console.log($(this)[0])
     let graphSize = $(this)[0]['attributes']['value'].value
+    currentDataObj = null
     if (graphSize === 'large') {
         currentDataObj = largeData
-        buildNetwork(largeData)
     } else if (graphSize === 'small') {
         currentDataObj = smallData
-        buildNetwork(smallData)
     } else {
         currentDataObj = multipleDonor
-        buildNetwork(multipleDonor)
     }
+    buildNetwork(window.currentDataObj)
 })
 
 // Layout dropdown logic
@@ -76,6 +74,8 @@ function clearSelectionInfo() {
  */
 const resetButton = document.getElementById('reset-button')
 resetButton.addEventListener('click', () => {
+    nodes.clear()
+    edges.clear()
     buildNetwork(currentDataObj)
 })
 
@@ -124,11 +124,19 @@ matchingRequestButton.addEventListener('click', () => {
     //Once promise returns, the matching data is assigned to the global matching object
     //Plot matches and update description is then called
     .then(data => {
+        console.log(data)
+
+        matchingRequestButton.disabled = false
+        document.getElementById('matching-request-running').innerHTML = ``
+        if (data['error']) {
+            callAlertBanner(data['error'])
+            return
+        }
+
         window.matchingObj = data
         plotMatches(data)
         updateDescriptionData(data['output']['exchange_data'][0])
-        matchingRequestButton.disabled = false
-        document.getElementById('matching-request-running').innerHTML = ``
+
     })
 })
 
@@ -214,8 +222,24 @@ deleteGraph.addEventListener('click', () => {
     edges.clear()
     window.currentDataObj = null
 })
+/** 
+ * Switches patient ID in node modal on and off when altruistic checkbox is changed 
+ */
+const altruisticCheckbox = document.getElementById('altruistic-input')
+altruisticCheckbox.addEventListener('change', (event) => {
+    console.log(event)
+    if (altruisticCheckbox.checked) {
+        document.getElementById('patient-input').value = ""
+        document.getElementById('patient-input').disabled = true
+    } else {
+        document.getElementById('patient-input').disabled = false
+    }
+})
 
-
+const modalCloseButton = document.getElementById('modal-close-button')
+modalCloseButton.addEventListener('click', ()  => {
+    network.disableEditMode()
+})
 
 /**
  * TESTING AREA FUNCTION TO BE REMOVED

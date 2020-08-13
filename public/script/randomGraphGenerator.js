@@ -23,6 +23,11 @@ function generateRandomGraph() {
     let edgesArray = generateEdges(nodesArray, density)
     addEdgesToJSON(edgesArray)
 // Builds network from JSON object
+    // nodes.update(nodesArray)
+
+    // setTimeout(() => {
+    //     edges.update(edgesArray)
+    // }, 5000)
     buildNetwork(window.currentDataObj)
     $('#random-graph-modal').modal('hide')
 }
@@ -86,6 +91,7 @@ function generateEdges(nodeArray, density) {
                 continue
             }
             if (checkDensity(density)) {
+                console.log("egde created")
                 edgeArray.push({
                    id: node.id +"-" + nodeArray[i].patient,
                    from: node.id,
@@ -130,9 +136,10 @@ function flipACoin() {
 function checkDensity(density) {
     let randomFloat = Math.random()
     
-    if (randomFloat > density) {
+    if (randomFloat >density) {
         return false
     } else {
+        
         return true
     }
 }

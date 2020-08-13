@@ -32,7 +32,15 @@ const defaultOptions = {
         editNode: function(nodeData, callback) {
             document.getElementById('id-input').value = nodeData.id
             document.getElementById('donor-age-input').value = nodeData.dage
-            document.getElementById('patient-input').value = nodeData.patient
+            
+            if (window.currentDataObj['data'][nodeData.id]['altruistic']) {
+                document.getElementById('altruistic-input').checked = true
+                document.getElementById('patient-input').value = ""
+                document.getElementById('patient-input').disabled = true
+            } else {
+                document.getElementById('altruistic-input').checked = false
+                document.getElementById('patient-input').value = nodeData.patient
+            }
             $('#nodeModal').modal('show')
             document.getElementById('saveNodeButton').onclick = addNodeToGraph.bind(this, nodeData, callback)
         },
@@ -62,6 +70,7 @@ const defaultOptions = {
     edges: {
         physics: false,
         color: {
+            color: '#848484',
             inherit: false,
             highlight: '#42f59e',
             opacity: 1,
@@ -73,6 +82,8 @@ const defaultOptions = {
         },
         smooth: {
             enabled: false,
+            type: 'discrete',
+            roundness: 0,
         },
         hoverWidth: 1.5,
         width: 1,
@@ -81,11 +92,13 @@ const defaultOptions = {
     interaction: {
         multiselect: true,
         selectable: true,
+        hideEdgesOnDrag: true,
+        hideEdgesOnZoom: true,
     },
     layout: {
         randomSeed: 2,
         improvedLayout: true,
-    //     // clusterThreshold: 12,
+        // clusterThreshold: 12,
     }
 }
 // Creation of graph canvas (known as network by library) 
@@ -117,6 +130,7 @@ network.on("beforeDrawing", function(ctx) {
 function buildNetwork(jsonObj) {
     nodes.clear()
     edges.clear()
+    defaultNetworkOptions()
     let entries = Object.entries(jsonObj['data'])
 
     let nodesArray = createNodes(entries)
@@ -134,7 +148,10 @@ function buildNetwork(jsonObj) {
     // setColourOptions()    
 
     nodes.update(nodesArray)
-    edges.add(edgesArray)
+    network.on('stabilized', () => {
+        edges.update(edgesArray)
+    })
+    
     network.fit(nodes)
 }
 /**
@@ -218,12 +235,14 @@ function layoutPhysics() {
             maxVelocity: 15,
             stabilization: {
                 enabled: true,
-                iterations: 2,
+                iterations: 1,
                 fit: true,
             },
+            solver: 'barnesHut',
             barnesHut: {
-                avoidOverlap: 1,
-                centralGravity: 0.5,
+                avoidOverlap: 0.5,
+                centralGravity: 0.7,
+                damping: 0.1,
             },
         }
     }
@@ -265,7 +284,7 @@ function setColourOptions() {
 // Function that resets the network options to default settings and applys colour changes selected by User
 function defaultNetworkOptions() {
     network.setOptions(defaultOptions)
-    setColourOptions()
+    // setColourOptions()
 }
 
 /**
@@ -301,8 +320,11 @@ function plotMatches(data) {
     }
 
     // network.setOptions( {physics: true} )
-    nodes.update(nodeArray)   
-    edges.update(edgeArray)
+    nodes.update(nodeArray)  
+    network.on('stabilized', () => {
+        edges.update(edgeArray)
+    })
+    network.fit(nodes)
 }
 
 /**
