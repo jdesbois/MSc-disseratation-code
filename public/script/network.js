@@ -92,14 +92,14 @@ const defaultOptions = {
     interaction: {
         multiselect: true,
         selectable: true,
-        hideEdgesOnDrag: true,
+        // hideEdgesOnDrag: true,
         hideEdgesOnZoom: true,
     },
     layout: {
         randomSeed: 2,
         improvedLayout: true,
         // clusterThreshold: 12,
-    }
+    },
 }
 // Creation of graph canvas (known as network by library) 
 var network = new vis.Network(networkContainer, data, defaultOptions)
@@ -128,28 +128,40 @@ network.on("beforeDrawing", function(ctx) {
  * @param {*} entries 
  */
 function buildNetwork(jsonObj) {
-    nodes.clear()
-    edges.clear()
+    // Clears nodes and sets default options: This is done so that if a user rebuilds a network its refreshed
+    nodes.remove(nodes.get())
+    edges.remove(edges.get())
     defaultNetworkOptions()
+
+    // Removes only the entries from the JSON Obj
     let entries = Object.entries(jsonObj['data'])
 
     let nodesArray = createNodes(entries)
     nodes.add(nodesArray)
+
     let edgesArray = createEdges(entries)
     
+    // Checks selected layout options, calls respective layout function to set options
     let layout = document.getElementById('layoutSelect')
-
     if (layout.value === "circle") {
         layoutCircle(nodesArray)
+        .then(()=> edges.update(edgesArray))
     } else {
         layoutPhysics()
+        nodes.update(nodesArray)
     }
 
     // setColourOptions()    
 
-    nodes.update(nodesArray)
-    network.on('stabilized', () => {
+    
+
+    /**
+     * Graph event: Once graph has stabilized physics is turned off
+     */
+    network.on("stabilized", () => {
+        network.setOptions( {physics: false} )
         edges.update(edgesArray)
+        network.fit(nodes)
     })
     
     network.fit(nodes)
@@ -197,7 +209,14 @@ function createEdges(entries) {
                         id: node[0] + "-" + recipientNode[i]['id'], 
                         from: node[0], 
                         to: recipientNode[i]['id'], 
-                        score: edge['score']
+                        score: edge['score'], 
+                        color: {
+                            color: '#848484',
+                            inherit: false,
+                            highlight: '#42f59e',
+                            opacity: 1,
+                        },
+                        width: 1,
                     }
                     // console.log(edgeObject)
                     edgeArray.push(edgeObject)
@@ -214,16 +233,17 @@ function createEdges(entries) {
  * Function that adds the required X/Y coords to each node to form a circle layout
  * @param {} nodes 
  */
-function layoutCircle(nodes) {
+async function layoutCircle(nodesArray) {
     const radius = 900;
     const d = 2 * Math.PI / nodes.length;
 
-    for (const node of nodes) {
+    for (const node of nodesArray) {
         let x = radius * Math.cos(d * node.id)
         let y = radius * Math.sin(d * node.id)
         node.x = x
         node.y = y
     }
+    nodes.update(nodesArray)
 }
 /**
  * Function to set the network options to layout using Barnes Hut physics algorithm
@@ -287,13 +307,7 @@ function defaultNetworkOptions() {
     // setColourOptions()
 }
 
-/**
- * Graph event: Once graph has stabilized physics is turned
- */
-network.on("stabilized", () => {
-    network.setOptions( {physics: false} )
-    network.fit(nodes)
-})
+
 
 
 /**
@@ -319,13 +333,20 @@ function plotMatches(data) {
         edgeArray = edgeArray.concat(colorEdges(currentCycle))
     }
 
-    // network.setOptions( {physics: true} )
-    nodes.update(nodeArray)  
+    nodes.update(nodeArray)
+
+    let layout = document.getElementById('layoutSelect').value
+    if (layout === "circle") {
+        layoutCircle(nodeArray)
+        .then(() => edges.update(edgeArray))
+    }
+
     network.on('stabilized', () => {
         edges.update(edgeArray)
+        network.fit(nodes)
     })
-    network.fit(nodes)
 }
+
 
 /**
  * Function: Takes a single cycle and iterates through it
@@ -394,10 +415,9 @@ function colorEdges(cycle) {
         edges: {
             color: {
                 inherit: false,
-                color: '#848484',
-                opacity: 0.4,
+                opacity: 0.3,
             },
-            width: 0.75,
+            width: 0.6,
         }
     }
     // Set options for non matched edges
@@ -409,32 +429,51 @@ function colorEdges(cycle) {
         color: '#E77D06',
         highlight: '#42f59e',
         opacity: 1,
+        inherit: false,
     }
+    // Gets only the IDs of each node from the cycle
     let cycleNodeIDsArray = getCycleNodeIDs(cycle)
-    // console.log(cycleNodeIDsArray)
-    // Logic for a 3 way exchange
-    if (cycleNodeIDsArray.length == 3) {
-        let edge1 = cycleNodeIDsArray[0]+"-"+cycleNodeIDsArray[1];
-        let edge2 = cycleNodeIDsArray[1]+"-"+cycleNodeIDsArray[2];
-        let edge3 = cycleNodeIDsArray[2]+"-"+cycleNodeIDsArray[0];                            
-        
-        edgeArray.push({id: edge1, color: edgeOptions,
-            width: 5,}, {id: edge2, color: edgeOptions,
-            width: 5,}, {id: edge3, color: edgeOptions,
-            width: 5,})
-    // Logic for a two way exchange
-    
-    } else if (cycleNodeIDsArray.length == 2) {
-        let edge1 = cycleNodeIDsArray[0]+"-"+cycleNodeIDsArray[1];
-        let edge2 = cycleNodeIDsArray[1]+"-"+cycleNodeIDsArray[0];
+    // Uses the nodeIds from each cycle to create the edges invovled in the cycle
+    let cycleEdgeIDsArray = buildCycleEdgeIDs(cycleNodeIDsArray)
 
-        edgeArray.push({id: edge1, color: edgeOptions,
-            width: 5,}, {id: edge2, color: edgeOptions,
-            width: 5,})
+    // Iterates through the edges and updates each one with the correct colour and width options
+    for (edge of cycleEdgeIDsArray) {
+        edgeArray.push({id: edge, color: edgeOptions, width: 5})
     }
+
     return edgeArray
 }
+/**
+ * Function: Takes single exchange cycle
+ * Iterates through cycle
+ * Creates Array of the edges invovled in the cycle
+ * @param {*} cycle 
+ */
+function buildCycleEdgeIDs(cycle) {
+    let edgeIDs = []
 
+    // Iterates through cycle
+    for (let i=0; i<cycle.length; i++) {
+        // If we are on last entry in cycle creates ID with last entry and first entry IDs and continues
+        if (i === cycle.length-1) {
+            let edgeID = cycle[i] + "-" + cycle[0]
+            edgeIDs.push(edgeID)
+            continue
+        }
+        // Creates edgeIDs by combining current cycle entry with the next
+        let edgeID = cycle[i] + "-" + cycle[i+1]
+        // Adds ID to array to be returned
+        edgeIDs.push(edgeID)
+
+    }
+    return edgeIDs
+}
+
+/**
+ * Takes a single cycle
+ * Iterates through cycle and uses Query function to get correct Donor/Recipient pair
+ * @param {*} cycle 
+ */
 function getCycleNodeIDs(cycle) {
     let cycleNodeIDs = []
     for (let i=0; i<cycle.length; i++) {
@@ -482,11 +521,11 @@ function buildJSONObject() {
  * @param {*} donorAge 
  */
 function addDonorToJSON(nodeData) {
-    //Checks if JSON object exists, creates blank one if not
+    
     let donorID = parseInt(nodeData.id)
     let patient = parseInt(nodeData.patient)
     let donorAge = nodeData['dage']
-
+    //Checks if JSON object exists, creates blank one if not
     if(window.currentDataObj === null) {
         window.currentDataObj = buildJSONObject();
     }
@@ -498,9 +537,6 @@ function addDonorToJSON(nodeData) {
     } else {
         currentDataObj['data'][donorID] = createJSONDonor(patient, donorAge)
     }
-
-    // currentDataObj['data'][donorID] = createJSONDonor(donorID, donorAge)
-    // console.log(currentDataObj)
 }
 /**
  * Function: Removes sources from selected donorID

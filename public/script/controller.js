@@ -74,8 +74,6 @@ function clearSelectionInfo() {
  */
 const resetButton = document.getElementById('reset-button')
 resetButton.addEventListener('click', () => {
-    nodes.clear()
-    edges.clear()
     buildNetwork(currentDataObj)
 })
 
@@ -109,7 +107,7 @@ const chainSelect = document.getElementById('chainSelect')
 
 matchingRequestButton.addEventListener('click', () => {
     network.disableEditMode()
-    let operation = operationSelect.value
+    let operation = operationSelect.valuesetsetsetset
     let chainLength = chainSelect.value
     // Checks to make sure there is current data to send to algorithm
     if (currentDataObj === null) {
@@ -236,6 +234,11 @@ altruisticCheckbox.addEventListener('change', (event) => {
     }
 })
 
+/**
+ * Event Listener that turns of edit mode when closing the Node Modal
+ * This is to fix a bug that caused the edit panel to not dissappear when exiting the modal
+ */
+
 const modalCloseButton = document.getElementById('modal-close-button')
 modalCloseButton.addEventListener('click', ()  => {
     network.disableEditMode()
@@ -254,7 +257,8 @@ const printObject = document.getElementById('print-obj').addEventListener('click
 })
 
 const addNode = document.getElementById('add-to-obj').addEventListener('click', ()=> {
-    $('#random-graph-modal').modal('show')
+    nodes.remove(nodes.get())
+    edges.remove(edges.get())
 })
 
 /**
