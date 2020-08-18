@@ -74,7 +74,7 @@ function clearSelectionInfo() {
  */
 const resetButton = document.getElementById('reset-button')
 resetButton.addEventListener('click', () => {
-    buildNetwork(currentDataObj)
+    buildNetwork(window.currentDataObj)
 })
 
 /**

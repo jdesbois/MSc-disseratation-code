@@ -73,7 +73,7 @@ const defaultOptions = {
             color: '#848484',
             inherit: false,
             highlight: '#42f59e',
-            opacity: 1,
+            opacity: 0.5,
         },
         arrows: {
             to: {
@@ -82,11 +82,9 @@ const defaultOptions = {
         },
         smooth: {
             enabled: false,
-            type: 'discrete',
-            roundness: 0,
         },
         hoverWidth: 1.5,
-        width: 1,
+        width: 0.5,
         selectionWidth: 2,
     },
     interaction: {
@@ -129,9 +127,10 @@ network.on("beforeDrawing", function(ctx) {
  */
 function buildNetwork(jsonObj) {
     // Clears nodes and sets default options: This is done so that if a user rebuilds a network its refreshed
-    nodes.remove(nodes.get())
     edges.remove(edges.get())
-    defaultNetworkOptions()
+    nodes.remove(nodes.get())
+    
+    network.setOptions(defaultNetworkOptions)
 
     // Removes only the entries from the JSON Obj
     let entries = Object.entries(jsonObj['data'])
@@ -145,18 +144,19 @@ function buildNetwork(jsonObj) {
     let layout = document.getElementById('layoutSelect')
     if (layout.value === "circle") {
         layoutCircle(nodesArray)
-        .then(()=> edges.update(edgesArray))
+        .then(()=> {
+            edges.update(edgesArray)
+            network.fit(nodes)
+        } )
     } else {
-        layoutPhysics()
-        nodes.update(nodesArray)
+        layoutPhysics().then(() => {
+            nodes.update(nodesArray)
+        })
+        
     }
-
-    // setColourOptions()    
-
-    
-
     /**
      * Graph event: Once graph has stabilized physics is turned off
+     * Edges are added
      */
     network.on("stabilized", () => {
         network.setOptions( {physics: false} )
@@ -164,7 +164,6 @@ function buildNetwork(jsonObj) {
         network.fit(nodes)
     })
     
-    network.fit(nodes)
 }
 /**
  * Function that takes the entries from the JSON object
@@ -214,9 +213,9 @@ function createEdges(entries) {
                             color: '#848484',
                             inherit: false,
                             highlight: '#42f59e',
-                            opacity: 1,
+                            opacity: 0.5,
                         },
-                        width: 1,
+                        width: 0.5,
                     }
                     // console.log(edgeObject)
                     edgeArray.push(edgeObject)
@@ -248,15 +247,15 @@ async function layoutCircle(nodesArray) {
 /**
  * Function to set the network options to layout using Barnes Hut physics algorithm
  */
-function layoutPhysics() {
+async function layoutPhysics() {
     let options = {
         physics: {
             enabled: true,
             maxVelocity: 15,
             stabilization: {
-                enabled: true,
-                iterations: 1,
-                fit: true,
+                enabled: false,
+                // iterations: 1,
+                // fit: true,
             },
             solver: 'barnesHut',
             barnesHut: {
@@ -301,14 +300,6 @@ function setColourOptions() {
     }
     network.setOptions(options)
 }
-// Function that resets the network options to default settings and applys colour changes selected by User
-function defaultNetworkOptions() {
-    network.setOptions(defaultOptions)
-    // setColourOptions()
-}
-
-
-
 
 /**
  * Function: Takes the data returned from the API request
@@ -411,17 +402,18 @@ function colorNode(node) {
 
 function colorEdges(cycle) {
     //Options for non-matched edges
-    let options = {
-        edges: {
-            color: {
-                inherit: false,
-                opacity: 0.3,
-            },
-            width: 0.6,
-        }
-    }
-    // Set options for non matched edges
-    network.setOptions(options)
+    // let options = {
+    //     edges: {
+    //         color: {
+    //             inherit: false,
+    //             opacity: 0.3,
+    //         },
+    //         width: 0.6,
+    //     }
+    // }
+    // // Set options for non matched edges
+    // network.setOptions(options)
+
     // Edge array to be returned
     let edgeArray = []
     // Color options for the matched edges
