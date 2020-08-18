@@ -244,22 +244,22 @@ modalCloseButton.addEventListener('click', ()  => {
     network.disableEditMode()
 })
 
-/**
- * TESTING AREA FUNCTION TO BE REMOVED
- */
-const testXMLConvert = document.getElementById('convert-to-xml')
-testXMLConvert.addEventListener('click', () => {
-    network.disableEditMode()
-})
+// /**
+//  * TESTING AREA FUNCTION TO BE REMOVED
+//  */
+// const testXMLConvert = document.getElementById('convert-to-xml')
+// testXMLConvert.addEventListener('click', () => {
+//     network.disableEditMode()
+// })
 
-const printObject = document.getElementById('print-obj').addEventListener('click', () => {
-    network.addEdgeMode()
-})
+// const printObject = document.getElementById('print-obj').addEventListener('click', () => {
+//     network.addEdgeMode()
+// })
 
-const addNode = document.getElementById('add-to-obj').addEventListener('click', ()=> {
-    nodes.remove(nodes.get())
-    edges.remove(edges.get())
-})
+// const addNode = document.getElementById('add-to-obj').addEventListener('click', ()=> {
+//     nodes.remove(nodes.get())
+//     edges.remove(edges.get())
+// })
 
 /**
  * Not in use yet - working out logic

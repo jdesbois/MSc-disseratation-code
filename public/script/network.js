@@ -130,7 +130,7 @@ function buildNetwork(jsonObj) {
     edges.remove(edges.get())
     nodes.remove(nodes.get())
     
-    network.setOptions(defaultNetworkOptions)
+    network.setOptions(defaultOptions)
 
     // Removes only the entries from the JSON Obj
     let entries = Object.entries(jsonObj['data'])
