@@ -23,11 +23,6 @@ function generateRandomGraph() {
     let edgesArray = generateEdges(nodesArray, density)
     addEdgesToJSON(edgesArray)
 // Builds network from JSON object
-    // nodes.update(nodesArray)
-
-    // setTimeout(() => {
-    //     edges.update(edgesArray)
-    // }, 5000)
     buildNetwork(window.currentDataObj)
     $('#random-graph-modal').modal('hide')
 }
@@ -135,7 +130,7 @@ function flipACoin() {
 function checkDensity(density) {
     let randomFloat = Math.random()
     
-    if (randomFloat >density) {
+    if (randomFloat > density) {
         return false
     } else {
         
@@ -143,10 +138,6 @@ function checkDensity(density) {
     }
 }
 
-function oneInThree() {
-    let num = Math.floor(Math.random() * 3) + 1
-    return num
-}
 
 /**
  * Generates a random edge score between 

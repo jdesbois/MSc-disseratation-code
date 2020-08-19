@@ -102,6 +102,7 @@ const defaultOptions = {
 // Creation of graph canvas (known as network by library) 
 var network = new vis.Network(networkContainer, data, defaultOptions)
 
+
 /**
  * Event Listener: Before drawing content to the canvas it saves state
  * Fills the backgroud white
@@ -129,9 +130,11 @@ function buildNetwork(jsonObj) {
     // Clears nodes and sets default options: This is done so that if a user rebuilds a network its refreshed
     edges.remove(edges.get())
     nodes.remove(nodes.get())
+
+    edges.clear()
+    nodes.clear()
     
     network.setOptions(defaultOptions)
-
     // Removes only the entries from the JSON Obj
     let entries = Object.entries(jsonObj['data'])
 
@@ -311,7 +314,7 @@ function setColourOptions() {
 
 function plotMatches(data) {
     // Resets current graph to pre-matching request
-    buildNetwork(currentDataObj)
+    buildNetwork(window.currentDataObj)
 
     let nodeArray = []
     let edgeArray = []

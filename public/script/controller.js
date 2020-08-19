@@ -216,9 +216,13 @@ const saveImageButton = document.getElementById('save-image').addEventListener('
  */
 const deleteGraph = document.getElementById('delete-button')
 deleteGraph.addEventListener('click', () => {
-    nodes.clear()
+    edges.remove(edges.get())
+    nodes.remove(nodes.get())
+
     edges.clear()
+    nodes.clear()
     window.currentDataObj = null
+    window.matchingObj = null
 })
 /** 
  * Switches patient ID in node modal on and off when altruistic checkbox is changed 
