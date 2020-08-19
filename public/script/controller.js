@@ -107,7 +107,7 @@ const chainSelect = document.getElementById('chainSelect')
 
 matchingRequestButton.addEventListener('click', () => {
     network.disableEditMode()
-    let operation = operationSelect.valuesetsetsetset
+    let operation = operationSelect.value
     let chainLength = chainSelect.value
     // Checks to make sure there is current data to send to algorithm
     if (currentDataObj === null) {
@@ -116,7 +116,8 @@ matchingRequestButton.addEventListener('click', () => {
     }
     // Disbales run button and produces working update to show user that function is running
     matchingRequestButton.disabled = true
-    document.getElementById('matching-request-running').innerHTML = `<strong> Working... </strong>`
+    matchingRequestButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'
+    // document.getElementById('matching-request-running').innerHTML = `<strong> Working... </strong>`
     // Calls matching request function with selected criteria and current data object
     makeMatchingRequest(currentDataObj, operation, chainLength)
     //Once promise returns, the matching data is assigned to the global matching object
@@ -125,7 +126,7 @@ matchingRequestButton.addEventListener('click', () => {
         console.log(data)
 
         matchingRequestButton.disabled = false
-        document.getElementById('matching-request-running').innerHTML = ``
+        matchingRequestButton.innerHTML = `Run`
         if (data['error']) {
             callAlertBanner(data['error'])
             return
