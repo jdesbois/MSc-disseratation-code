@@ -236,7 +236,7 @@ function createEdges(entries) {
  * @param {} nodes 
  */
 async function layoutCircle(nodesArray) {
-    const radius = 900;
+    const radius = nodes.length * 10;
     const d = 2 * Math.PI / nodes.length;
 
     for (const node of nodesArray) {
