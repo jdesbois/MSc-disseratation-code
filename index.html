@@ -298,27 +298,25 @@ aria-hidden="true">
                         </select>
                     </div>
                     <!--End of matching criteria selection area-->
-                <button class="btn btn-info" id="matching-request">
-                    Run
-                </button>
+                    <button class="btn btn-info" id="matching-request">
+                        Run
+                    </button>
                 </div>
+                <div class="card text-left selected-card"  id="selected-item-info">
+                    <p class="card-header">Selected Node/Edge Info</p>
+                    <div class="card-body">
+                        <span id="selected-item-display"></span>
+
+                    </div>
+                  </div>
                 
             </div> <!-- End of control panel-->
         </div> <!-- End of graph/control row-->
         <!-- End of Selected Item Row -->
         <!--Footer content-->
         <div class="row" id="stats-container">
-            <div class="col-lg-4">
-                <div class="card text-center"  id="selected-item-info">
-                    <h5 class="card-header">Selected Node/Edge Info</h5>
-                    <div class="card-body">
-                        <span id="selected-item-display"></span>
-
-                    </div>
-                  </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="card text-center" id="desc-card">
+            <div class="col-lg-6">
+                <div class="card text-center matching-card" id="desc-card">
                     <h5 class="card-header">
                         Matching Criteria
                     </h5>
@@ -327,8 +325,8 @@ aria-hidden="true">
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">
-                <div class="card text-center" id="exchange-data-card">
+            <div class="col-lg-6">
+                <div class="card text-center matching-card" id="exchange-data-card">
                     <h5 class="card-header">
                         Exchange Data
                     </h5>

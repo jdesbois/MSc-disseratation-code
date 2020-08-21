@@ -58,7 +58,8 @@ function displaySelectedNodeInfo(params) {
 
 // Displays information about selected edge
 function displaySelectedEdgeInfo(params) {
-    let innerString = `Edge ID: ${params['edges'][0]} Score: ${edges.get(params['edges'][0])['score']}`
+    let innerString = `Edge ID: ${params['edges'][0]} <br />
+                       Score: ${edges.get(params['edges'][0])['score']}`
     document.getElementById('selected-item-display').innerHTML = innerString
 }
 
