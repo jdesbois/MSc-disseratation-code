@@ -56,4 +56,23 @@ input[type="file"] {
     min-height: 245px;
 }
 
-
+/* Help Table CSS */
+#help-table {
+    text-align: left;
+}
+#help-table td:nth-child(2){
+    border-left: 1px solid black;
+}
+#help-func-col {
+    border-right: 1px solid black;
+}
+th {
+    border-bottom: 1px solid black;
+    padding: 7px;
+}
+tr {
+    border-bottom: 1px solid black;
+}
+td {
+    padding: 7px;
+}

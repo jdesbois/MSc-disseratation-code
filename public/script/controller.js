@@ -90,7 +90,22 @@ randomGraphButton.addEventListener('click', () => {
     $('#random-graph-modal').modal('show')
     document.getElementById('randomGraphSave').onclick = generateRandomGraph.bind()
 })
-
+/**
+ * Event listenere for help button on nav bar
+ * Shows modal when pressed
+ */
+const helpButton = document.getElementById('help-button')
+helpButton.addEventListener('click', () => {
+    $('#help-modal').modal('show')
+})
+/**
+ * Event listener for about button on nav bar
+ * Shows modal when pressed
+ */
+const aboutButton = document.getElementById('about-button')
+aboutButton.addEventListener('click', () => {
+    $('#about-modal').modal('show')
+})
 // Set Colour button logic 
 const setLayoutButton = document.getElementById('set-layout-options')
 setLayoutButton.addEventListener('click', () => {
