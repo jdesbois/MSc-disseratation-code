@@ -116,7 +116,50 @@
               </tr>
               <tr>
                   <td>Matching Criteria</td>
-                  <td>Allows the user to run an optimal matching request on the currently open graph. The API allows the user to select from two chain lengths and three operational types.</td>
+                  <td>Allows the user to run an optimal matching request on the currently open graph. The API allows the user to select from two chain lengths and three operational types.
+                        <table>
+                            <tr>
+                                <th>Option</th>
+                                <th>Result</th>
+                            </tr>
+                            <tr>
+                                <td>Chain Length</td>
+                                <td>Determines the length of a chain that is allowed in an altruistic donor cycle </td>
+                            </tr>
+                            <tr>
+                                <td>Opertaion: Optimal</td>
+                                <td>Returns a set of exchanges with priortised constraints set as below:
+                                    <ol>
+                                        <li>Number of pairwaise exchanges maximised</li>
+                                        <li>Total number of transplants maximised</li>
+                                        <li>Number of altruistic donors invovled maximised</li>
+                                        <li>Number of 3 way exchanges maximised</li>
+                                        <li>Numer of back-arcs in 3 way exchanges maximised</li>
+                                        <li>Over weight is maximised</li>
+                                    </ol>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Operation: Maxcard </td>
+                                <td>Returns a set of exchanges with the below constraints priortised:
+                                    <ol>
+                                        <li>Total number of transplants maximised</li>
+                                        <li>Overall weight is maximised</li>
+                                    </ol>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Operation: Pairs</td>
+                                <td>Returns a set of pairwise only exchanges with the below optimisations:
+                                    <ol>
+                                        <li>Total number of transplants maximised</li>
+                                        <li>Overall weight is maximised</li>
+                                    </ol>
+                                </td>
+                            </tr>
+                        </table>
+
+                  </td>
               </tr>
               <tr>
                   <td>Edit Menu</td>
