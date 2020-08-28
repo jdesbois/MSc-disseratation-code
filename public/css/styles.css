@@ -12,7 +12,7 @@ body {
 
 #myNetwork {
     /* width: 100%; */
-    height: 600px;
+    height: 670px;
     border: 1px solid lightgrey;
     margin-bottom: 5px;
 }
@@ -35,17 +35,41 @@ input[type="file"] {
 /*  Styles the selected item information box */
 .selected-card {
     margin-top: 10px;
+    margin-bottom: 10px;
     height: 171px;
 }
 .selected-card .card-header {
     background-color: #e9ecef;
 }
+/* Graph Legend Styling */
+#graph-legend-info {
+    height:185px;
+}
+.colour-box {
+    float: left;
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    border: 1px solid rgba(0, 0, 0, .2);
+    clear: both;
+}
 
-/* Control panel styling */
+.altruistic-match-colour {
+    background-color: #F65058FF;
+}
 
+.matched-pair-colour {
+    background-color: #FBDE44FF;
+}
 
-/* Algorithm data styling */
+.matched-cycle-edge-colour {
+    background-color: #28334AFF;
+}
 
+/* Matching and Exchange data */
+.card-header {
+    background-color: #e9ecef;
+}
 
 #id-alert {
     display: none;

@@ -63,11 +63,6 @@ function displaySelectedEdgeInfo(params) {
     document.getElementById('selected-item-display').innerHTML = innerString
 }
 
-// Clears selection info when click occurs on graph
-function clearSelectionInfo() {
-    document.getElementById('selected-item-display').innerHTML = " "
-}
-
 // Reset graph button logic
 /**
  * Event listener for reset graph button
@@ -192,18 +187,32 @@ function updateDescriptionData(exchange_data) {
     const matchingDesc = document.getElementById('matching-desc')
     matchingDesc.innerHTML = exchange_data['description']
 
-    const numExchanges = document.getElementById('num-exchanges')
-    const threeWays = document.getElementById('three-ways')
-    const twoWays = document.getElementById('two-ways')
-    const totalTransplants = document.getElementById('total-transplants')
-    const weight = document.getElementById('weight')
+    
+    // const numExchanges = document.getElementById('num-exchanges')
+    // const threeWays = document.getElementById('three-ways')
+    // const twoWays = document.getElementById('two-ways')
+    // const totalTransplants = document.getElementById('total-transplants')
+    // const weight = document.getElementById('weight')
 
-    numExchanges.innerHTML = exchange_data['exchanges'].length 
-    threeWays.innerHTML = exchange_data['three_way_exchanges']
-    twoWays.innerHTML = exchange_data['two_way_exchanges']
-    totalTransplants.innerHTML = exchange_data['total_transplants']
-    weight.innerHTML = exchange_data['weight']
+    // numExchanges.innerHTML = exchange_data['exchanges'].length 
+    // threeWays.innerHTML = exchange_data['three_way_exchanges']
+    // twoWays.innerHTML = exchange_data['two_way_exchanges']
+    // totalTransplants.innerHTML = exchange_data['total_transplants']
+    // weight.innerHTML = exchange_data['weight']
 
+    let numExchanges = exchange_data['exchanges'].length
+    let threeWayExchanges = exchange_data['three_way_exchanges']
+    let twoWayExchanges = exchange_data['two_way_exchanges']
+    let totalTransplants = exchange_data['total_transplants']
+    let weight = exchange_data['weight']
+
+    let exchangeDataSting = `Number of exchanges: ${numExchanges} <br />
+                             Three way exchanges: ${threeWayExchanges} <br />
+                             Two way exchanges: ${twoWayExchanges} <br />
+                             Total transplants: ${totalTransplants} <br />
+                             Weight: ${weight} <br />`
+
+    document.getElementById('exchange-data-body').innerHTML = exchangeDataSting
     console.log(exchange_data)
 }
 
@@ -265,6 +274,29 @@ modalCloseButton.addEventListener('click', ()  => {
     network.disableEditMode()
 })
 
+/**
+ * Functions that clears data such as matching criteria, exchange data, selected item info
+ */
+// Master function that calls all clearing functions
+function resetPageDataInfo() {
+    clearSelectionInfo()
+    clearExchangeData()
+    clearMatchingCriteria()
+}
+// Clears selection info when click occurs on graph
+function clearSelectionInfo() {
+    document.getElementById('selected-item-display').innerHTML = ""
+}
+
+// Clears matching criteria data
+function clearMatchingCriteria() {
+    document.getElementById('matching-desc').innerHTML = ""
+}
+
+function clearExchangeData() {
+    document.getElementById('exchange-data-body').innerHTML = ""
+}
+
 // /**
 //  * TESTING AREA FUNCTION TO BE REMOVED
 //  */
@@ -281,6 +313,9 @@ modalCloseButton.addEventListener('click', ()  => {
 //     nodes.remove(nodes.get())
 //     edges.remove(edges.get())
 // })
+const testButton = document.getElementById('test-button').addEventListener('click', () => {
+    edges.clear()
+})
 
 /**
  * Not in use yet - working out logic

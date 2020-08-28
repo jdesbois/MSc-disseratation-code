@@ -127,10 +127,9 @@ network.on("beforeDrawing", function(ctx) {
  * @param {*} entries 
  */
 function buildNetwork(jsonObj) {
+    // Clears selection, matching and exchange data info
+    resetPageDataInfo()
     // Clears nodes and sets default options: This is done so that if a user rebuilds a network its refreshed
-    edges.remove(edges.get())
-    nodes.remove(nodes.get())
-
     edges.clear()
     nodes.clear()
     
@@ -383,11 +382,11 @@ function colorNode(node) {
 
     if (node['a']) {
         coloredNode.color = {
-            background: '#61C962',
+            background: '#F65058FF',
         }
     } else {
         coloredNode.color = {
-            background: '#30AFBF',
+            background: '#FBDE44FF',
         }
     }
 
@@ -421,7 +420,7 @@ function colorEdges(cycle) {
     let edgeArray = []
     // Color options for the matched edges
     let edgeOptions = {
-        color: '#E77D06',
+        color: '#6b6a6a',
         highlight: '#42f59e',
         opacity: 1,
         inherit: false,
@@ -582,8 +581,8 @@ function addNodeToGraph(nodeData, callback) {
         console.log(`Adding to graph`)
         callback(nodeData)
     } catch (err) {
-        console.log(err.message)
-        callAlertBanner(err.message)
+        console.log(`Donor ID: ${nodeData.id} already exists`)
+        callAlertBanner(`Donor ID: ${nodeData.id} already exists`)
     }
     $('#nodeModal').modal('hide')
     

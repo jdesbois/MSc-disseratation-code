@@ -36,14 +36,17 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title" id="about-modal-label">About</h4>
+          <h4 class="modal-title" id="about-modal-label">About the application</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
           <p>The aim of the application is to facilitate the presentation and comprehension of the data associated with Paired Kidney Exchanges.</p>
-          <p></p>
+
+          <p>The data is presented in the form of a directed graph with each vertex/node representing a donor/recipient pair and the edges representing compatibility between a donor and a recipient.</p>
+
+          <p>The data can then be passed to an external optimal matching API and the resulting optimal matching is presented on the graph through colouring nodes and edges</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -106,7 +109,7 @@
                   <td>Layout Options</td>
                   <td>Allows the user to select from two different layout options which are updated when the Set button is pressed:
                       <ol>
-                          <li>Physics: This layout options uses the barnes hut algorithm to present the nodes</li>
+                          <li>Barnes Hut: This layout options uses the barnes hut algorithm to present the nodes using the physics built into VisJS</li>
                           <li>Circle: This layout option presents the nodes in a circular layout</li>
                       </ol>
                   </td>
@@ -368,7 +371,7 @@ aria-hidden="true">
                             <label class="input-group-text" for="layoutSelect">Layout</label>
                         </div>
                         <select class="custom-select" id="layoutSelect">
-                            <option value="physics">Physics</option>
+                            <option value="physics">Barnes Hut Physics</option>
                             <option value="circle">Circle</option>
                         </select>
                     </div>
@@ -427,13 +430,19 @@ aria-hidden="true">
                     </button>
                 </div>
                 <div class="card text-left selected-card"  id="selected-item-info">
-                    <p class="card-header">Selected Node/Edge Info</p>
+                    <p class="card-header">Selected Element Info</p>
                     <div class="card-body">
                         <span id="selected-item-display"></span>
-
                     </div>
-                  </div>
-                
+                </div>
+                <div class="card" id="graph-legend-info">
+                    <p class="card-header">Matched Graph Legend</p>
+                    <div class="card-body">
+                        <div><div class="colour-box matched-pair-colour"></div>Matched Pair</div> <br />
+                        <div><div class="colour-box altruistic-match-colour"></div>Matched Altruistic Donor</div> <br />
+                        <div><div class="colour-box matched-cycle-edge-colour"></div>Matched Cycle Edges</div> <br />
+                    </div>
+                </div>
             </div> <!-- End of control panel-->
         </div> <!-- End of graph/control row-->
         <!-- End of Selected Item Row -->
@@ -455,12 +464,12 @@ aria-hidden="true">
                         Exchange Data
                     </h5>
                     <div class="card-body">
-                        <p class="card-text">
-                            Number of exchanges: <strong id="num-exchanges"></strong> <br />
+                        <p class="card-text" id="exchange-data-body">
+                            <!-- Number of exchanges: <strong id="num-exchanges"></strong> <br />
                             Three way exchanges: <strong id="three-ways"></strong> <br />
                             Two way exchanges: <strong id="two-ways"></strong> <br />
                             Total transplants: <strong id="total-transplants"></strong><br />
-                            Weight: <strong id="weight"></strong> <br />
+                            Weight: <strong id="weight"></strong> <br /> -->
                         </p>
                     </div>
                 </div>
@@ -468,17 +477,17 @@ aria-hidden="true">
         </div>
         <!-- End of footer row -->
 
-        <!-- <div class="row">
+        <div class="row">
             <div class="col-lg-12">
                 <p>
                 <h5>Testing area not part of functionality of app</h5>
                 <button id="print-obj">Print currently donorPool object</button>
-                <button id="add-to-obj">add node to object</button>
+                <button id="test-button">Test Button</button>
                 <button id="convert-to-xml"> Test XML conversion</button>
                 </p>
 
             </div>
-        </div> -->
+        </div>
 
     </div>
     <!--End of Root container-->
