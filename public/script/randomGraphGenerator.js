@@ -146,3 +146,11 @@ function checkDensity(density) {
 function generateRandomScore() {
     return Math.floor(Math.random() * 100) + 1
 }
+
+module.exports = {
+    generateNodes,
+    generateEdges,
+    generateRandomScore,
+    randomDonorAge,
+    flipACoin
+}

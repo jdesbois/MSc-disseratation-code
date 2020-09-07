@@ -36,6 +36,8 @@
   },
   "devDependencies": {
     "jest": "^26.4.0",
+    "vis": "^4.21.0-EOL",
+    "vis-data": "^7.0.0",
     "vis-network": "^8.3.2"
   }
 }

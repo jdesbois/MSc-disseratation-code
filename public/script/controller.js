@@ -187,19 +187,6 @@ function updateDescriptionData(exchange_data) {
     const matchingDesc = document.getElementById('matching-desc')
     matchingDesc.innerHTML = exchange_data['description']
 
-    
-    // const numExchanges = document.getElementById('num-exchanges')
-    // const threeWays = document.getElementById('three-ways')
-    // const twoWays = document.getElementById('two-ways')
-    // const totalTransplants = document.getElementById('total-transplants')
-    // const weight = document.getElementById('weight')
-
-    // numExchanges.innerHTML = exchange_data['exchanges'].length 
-    // threeWays.innerHTML = exchange_data['three_way_exchanges']
-    // twoWays.innerHTML = exchange_data['two_way_exchanges']
-    // totalTransplants.innerHTML = exchange_data['total_transplants']
-    // weight.innerHTML = exchange_data['weight']
-
     let numExchanges = exchange_data['exchanges'].length
     let threeWayExchanges = exchange_data['three_way_exchanges']
     let twoWayExchanges = exchange_data['two_way_exchanges']
@@ -318,15 +305,5 @@ const testButton = document.getElementById('test-button').addEventListener('clic
     
 })
 
-/**
- * Not in use yet - working out logic
- */
-function checkDataBeforeSave() {
-    if (window.currentDataObj == null) {
-        callAlertBanner("No data currently present to save, please build a graph first!")
-        return false
-    } else {
-        return true
-    }
-}
+
 
