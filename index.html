@@ -127,15 +127,15 @@
                                 <td>Determines the length of a chain that is allowed in an altruistic donor cycle </td>
                             </tr>
                             <tr>
-                                <td>Opertaion: Optimal</td>
+                                <td>Operation: Optimal</td>
                                 <td>Returns a set of exchanges with priortised constraints set as below:
                                     <ol>
-                                        <li>Number of pairwaise exchanges maximised</li>
+                                        <li>Number of effective pairwaise exchanges maximised</li>
                                         <li>Total number of transplants maximised</li>
-                                        <li>Number of altruistic donors invovled maximised</li>
-                                        <li>Number of 3 way exchanges maximised</li>
-                                        <li>Numer of back-arcs in 3 way exchanges maximised</li>
-                                        <li>Over weight is maximised</li>
+                                        <li>Number of altruistic donors invovled in a pairwise exchange is maximised</li>
+                                        <li>Number of 3 way exchanges manimised</li>
+                                        <li>Numer of back-arcs in selected 3 way exchanges maximised</li>
+                                        <li>Overall weight is maximised</li>
                                     </ol>
                                 </td>
                             </tr>
@@ -181,6 +181,10 @@
                               <td>Edit Node</td>
                               <td>Allows the user to edit a node, the node must first be selected and the edit button selected. Presents options to edit donor id, patient id, donor age and altruistic flag</td>
                           </tr>
+                          <tr>
+                            <td>Edit Edge</td>
+                            <td>The ability to edit an edge is not present, the edge must be deleted and recreated using the add edge function.</td>
+                        </tr>
                           <tr>
                               <td>Delete Selected</td>
                               <td>Allows user to delete the currently selected node or edge</td>
@@ -546,6 +550,7 @@ aria-hidden="true">
     <script type="text/javascript" src="/public/script/xmlInputParser.js"></script>
     <script type="text/javascript" src="/public/script/xmlDOMOutputParser.js"></script>
     <script type="text/javascript" src="/public/script/randomGraphGenerator.js"></script>
+    <script type="text/javascript" src="/public/script/canvas2svg.js"></script>
 </body>
 
 

@@ -314,7 +314,8 @@ function clearExchangeData() {
 //     edges.remove(edges.get())
 // })
 const testButton = document.getElementById('test-button').addEventListener('click', () => {
-    edges.clear()
+    console.log(network.getSerializeCanvasToSvg())
+    
 })
 
 /**

@@ -132,7 +132,7 @@ function buildNetwork(jsonObj) {
     // Clears nodes and sets default options: This is done so that if a user rebuilds a network its refreshed
     edges.clear()
     nodes.clear()
-    
+
     network.setOptions(defaultOptions)
     // Removes only the entries from the JSON Obj
     let entries = Object.entries(jsonObj['data'])
