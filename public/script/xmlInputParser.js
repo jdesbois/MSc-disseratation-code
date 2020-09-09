@@ -92,3 +92,10 @@ function getMatches(matches) {
     }
     return matchesArray
 }
+
+module.exports = {
+    getMatches,
+    getSources,
+    createNode,
+    readXMLFile
+}

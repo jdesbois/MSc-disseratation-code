@@ -6,9 +6,7 @@
 // const network = require('../public/script/network')
 // const jsonObj = require('../public/data/example_small_data.json')
 
-test('Unable to fulfill tests for network', () => {
-    expect('Hello').toBe('Hello')
-})
+
 
 // /**
 //  * Setup data to be tested
@@ -18,7 +16,7 @@ test('Unable to fulfill tests for network', () => {
 
 // let entries = Object.entries(jsonObj['data'])
 
-// let nodesArray = network.createNodes(entries)
+// let nodesArray = createNodes(entries)
 
 // nodes.add(nodesArray)
 
@@ -45,3 +43,6 @@ test('Unable to fulfill tests for network', () => {
 //  * TEST DATA
 //  */
 
+test('Unable to fulfill tests for network', () => {
+    expect('Hello').toBe('Hello')
+})

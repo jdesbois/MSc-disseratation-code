@@ -133,4 +133,15 @@ function createMatchString(match) {
     
 }
 
-exports.createXMLString = createXMLString
+// exports.createXMLString = createXMLString
+
+module.exports = {
+    createXMLString,
+    createMatchString,
+    createMatchesString,
+    createAltruisticString,
+    createDageString,
+    createSourcesString,
+    createSourceString,
+    createEntryString
+}

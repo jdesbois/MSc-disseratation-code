@@ -134,6 +134,7 @@ function buildNetwork(jsonObj) {
     nodes.clear()
 
     network.setOptions(defaultOptions)
+
     // Removes only the entries from the JSON Obj
     let entries = Object.entries(jsonObj['data'])
 
@@ -677,4 +678,9 @@ function callAlertBanner(msg) {
  */
 function hideAlertBanner() {
     $('#id-alert').hide()
+}
+
+module.exports = {
+    createNodes,
+    createEdges
 }
