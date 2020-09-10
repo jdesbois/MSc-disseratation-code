@@ -13,7 +13,7 @@ const xmlInput = require('../public/script/xmlInputParser')
     let xmlEntries = xmlDocument.getElementsByTagName('entry')
     let jsonNode = xmlInput.createNode(xmlEntries[0])
 
-    expect(jsonNode).toBeDefined()
+    expect(jsonNode).not.toBe(null)
     expect(typeof jsonNode).toBe('object')
  })
 
@@ -21,7 +21,7 @@ const xmlInput = require('../public/script/xmlInputParser')
      let xmlEntry = xmlDocument.getElementsByTagName('entry')[0]
      let sourcesArray = xmlInput.getSources(xmlEntry.getElementsByTagName('sources')[0])
 
-     expect(sourcesArray).toBeDefined()
+     expect(sourcesArray).not.toBe(null)
      expect(typeof sourcesArray).toBe('object')
      expect(sourcesArray[0]).toBe(1)
 
@@ -31,7 +31,7 @@ const xmlInput = require('../public/script/xmlInputParser')
     let xmlEntry = xmlDocument.getElementsByTagName('entry')[0]
     let matchesArray = xmlInput.getMatches(xmlEntry.getElementsByTagName('matches')[0])
 
-    expect(matchesArray).toBeDefined()
+    expect(matchesArray).not.toBe(null)
     expect(typeof matchesArray).toBe('object')
     expect(matchesArray[0]['recipient']).toBe(2)
  })
