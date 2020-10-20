@@ -14,3 +14,7 @@ Once installed download the code repo as you normal would, navigate to the folde
 Once the initial install is complete to run the development branch of the application you can type npm run dev or for the production branch type npm start. 
 
 You should be provided with an address in which to access the running application.
+
+
+## Deployment
+The application is currently deployed on the free tier of Heroku Application Platform and can be accessed via https://pke-graph-visualiser.herokuapp.com
